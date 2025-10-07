@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - UFSM</title>
+  <link rel="stylesheet" href="../css/geral.css">
+  <link rel="stylesheet" href="../css/cadastro.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand">UFSM | Sistema de Agendamento</a>
+    </div>
+  </nav>
+
+  <section class="pt-5 mt-5" id="cadastro-section">
+    <div class="container">
+      <div class="d-flex justify-content-center">
+        <div class="w-100" style="max-width: 400px;">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="text-center text-primary mb-4">Cadastre-se</h2>
+              <form id="cadastro-form">
+                <div class="mb-3">
+                  <label class="form-label">Nome</label>
+                  <input type="text" id="nome" class="form-control" placeholder="Digite seu nome" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">E-mail</label>
+                  <input type="email" id="email" class="form-control" placeholder="exemplo@ufsm.br" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Senha</label>
+                  <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Confirmar senha</label>
+                <input type="password" id="confirmar-senha" class="form-control" placeholder="Repita sua senha" required>
+              </div>
+              <div id="mensagem" class="mb-3"></div>
+              <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+            </form>
+              <div class="text-center mt-3">
+                <small class="text-muted">Já tem uma conta? <a href="login.html" class="text-primary" id="link">Cadastre-se</a></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="../js/cadastro.js"></script>
+</body>
+</html>

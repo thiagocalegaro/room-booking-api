@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Salas - Painel Administrativo</title>
+  <link rel="stylesheet" href="../css/geral.css">
+  <link rel="stylesheet" href="../css/gerenciar-salas.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="painel.html">Painel Administrativo</a>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="painel.html">Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Usuários</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Agendamentos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Recursos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Sair</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="py-5">
+    <div class="container mt-5 pt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Gerenciar Salas</h2>
+        <button class="btn btn-success" id="btn-add">Adicionar Sala</button>
+      </div>
+
+      <div class="table-container">
+        <table class="salas-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Local</th>
+              <th>Capacidade</th>
+              <th>Recursos</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="salas-body">
+            <!-- Salas carregadas via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Criar/Editar Sala -->
+  <div class="modal" id="modal-sala">
+    <div class="modal-content">
+      <span class="close" id="close-modal">&times;</span>
+      <h3 id="modal-title">Adicionar Sala</h3>
+      <form id="form-sala">
+        <div class="mb-3">
+          <label for="nome">Nome da Sala</label>
+          <input type="text" id="nome" required>
+        </div>
+        <div class="mb-3">
+          <label for="local">Local</label>
+          <input type="text" id="local" required>
+        </div>
+        <div class="mb-3">
+          <label for="capacidade">Capacidade</label>
+          <input type="number" id="capacidade" min="1" required>
+        </div>
+        <div class="mb-3">
+          <label for="recursos">Recursos (separados por vírgula)</label>
+          <input type="text" id="recursos">
+        </div>
+        <button type="submit" class="btn btn-success w-100" id="submit-btn">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Dados iniciais de exemplo
+    let salas = [
+      {id: 1, nome: "Sala 101", local: "Prédio A, 1º andar", capacidade: 30, recursos: "Projetor, Wi-Fi, Ar-condicionado"},
+      {id: 2, nome: "Sala 102", local: "Prédio A, 1º andar", capacidade: 25, recursos: "TV, Wi-Fi, Quadro branco"},
+      {id: 3, nome: "Auditório A", local: "Prédio B, Térreo", capacidade: 100, recursos: "Projetor, Som, Ar-condicionado"}
+    ];
+
+    const salasBody = document.getElementById('salas-body');
+    const modal = document.getElementById('modal-sala');
+    const btnAdd = document.getElementById('btn-add');
+    const closeModal = document.getElementById('close-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const formSala = document.getElementById('form-sala');
+    const submitBtn = document.getElementById('submit-btn');
+
+    let editId = null;
+
+    // Função para renderizar tabela
+    function renderSalas() {
+      salasBody.innerHTML = '';
+      salas.forEach(sala => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${sala.nome}</td>
+          <td>${sala.local}</td>
+          <td>${sala.capacidade}</td>
+          <td>${sala.recursos}</td>
+          <td class="actions">
+            <button class="btn btn-warning btn-sm" onclick="editarSala(${sala.id})">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="excluirSala(${sala.id})">Excluir</button>
+          </td>
+        `;
+        salasBody.appendChild(tr);
+      });
+    }
+
+    // Abrir modal para adicionar sala
+    btnAdd.addEventListener('click', () => {
+      editId = null;
+      modalTitle.textContent = 'Adicionar Sala';
+      formSala.reset();
+      submitBtn.textContent = 'Salvar';
+      modal.style.display = 'block';
+    });
+
+    // Fechar modal
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Fechar modal clicando fora
+    window.addEventListener('click', e => {
+      if (e.target == modal) modal.style.display = 'none';
+    });
+
+    // Editar sala
+    function editarSala(id) {
+      const sala = salas.find(s => s.id === id);
+      editId = id;
+      modalTitle.textContent = 'Editar Sala';
+      document.getElementById('nome').value = sala.nome;
+      document.getElementById('local').value = sala.local;
+      document.getElementById('capacidade').value = sala.capacidade;
+      document.getElementById('recursos').value = sala.recursos;
+      submitBtn.textContent = 'Atualizar';
+      modal.style.display = 'block';
+    }
+
+    // Excluir sala
+    function excluirSala(id) {
+      if(confirm('Deseja realmente excluir esta sala?')) {
+        salas = salas.filter(s => s.id !== id);
+        renderSalas();
+      }
+    }
+
+    // Salvar/Atualizar sala
+    formSala.addEventListener('submit', e => {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value;
+      const local = document.getElementById('local').value;
+      const capacidade = parseInt(document.getElementById('capacidade').value);
+      const recursos = document.getElementById('recursos').value;
+
+      if(editId) {
+        // Atualizar
+        const sala = salas.find(s => s.id === editId);
+        sala.nome = nome;
+        sala.local = local;
+        sala.capacidade = capacidade;
+        sala.recursos = recursos;
+      } else {
+        // Criar nova
+        const novoId = salas.length ? Math.max(...salas.map(s => s.id)) + 1 : 1;
+        salas.push({id: novoId, nome, local, capacidade, recursos});
+      }
+
+      modal.style.display = 'none';
+      renderSalas();
+    });
+
+    // Renderizar tabela inicialmente
+    renderSalas();
+  </script>
+</body>
+</html>

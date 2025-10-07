@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UFSM - Sistema de Agendamento</title>
+  <link rel="stylesheet" href="../css/geral.css">
+  <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="../paginasUsuario/index.html">UFSM - Sistema de Agendamento</a>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="../paginasAuth/login.html">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="../paginasAuth/cadastro.html">Cadastro</a></li>
+        <li class="nav-item"><a class="nav-link" href="../paginasUsuario/agendar.html">Agendar Sala</a></li>
+        <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Minhas Reservas -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <h2 class="mb-4 text-primary">Minhas Reservas</h2>
+      <div class="table-container">
+        <table class="reservas-table">
+          <thead>
+            <tr>
+              <th>Sala</th>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sala 101</td>
+              <td>26/08/2025</td>
+              <td>14:00 - 15:00</td>
+              <td><span class="badge badge-success">Confirmado</span></td>
+              <td class="actions">
+                <button class="btn btn-warning btn-sm">Editar</button>
+                <button class="btn btn-danger btn-sm">Cancelar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Salas Disponíveis -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="mb-4 text-primary">Salas Disponíveis para Agendamento</h2>
+      <div class="salas-grid">
+        <div class="sala-card">
+          <h3>Sala 101</h3>
+          <p>Local: Prédio A, 1º andar</p>
+          <p>Capacidade: 30 pessoas</p>
+          <p>Recursos: Projetor, Wi-Fi, Ar-condicionado</p>
+          <button class="btn btn-primary btn-sm" onclick="agendarSala('Sala 101')">Agendar Esta Sala</button>
+        </div>
+        <div class="sala-card">
+          <h3>Sala 102</h3>
+          <p>Local: Prédio A, 1º andar</p>
+          <p>Capacidade: 25 pessoas</p>
+          <p>Recursos: TV, Wi-Fi, Quadro branco</p>
+          <button class="btn btn-primary btn-sm" onclick="agendarSala('Sala 102')">Agendar Esta Sala</button>
+        </div>
+        <div class="sala-card">
+          <h3>Auditório A</h3>
+          <p>Local: Prédio B, Térreo</p>
+          <p>Capacidade: 100 pessoas</p>
+          <p>Recursos: Projetor, Som, Ar-condicionado</p>
+          <button class="btn btn-primary btn-sm" onclick="agendarSala('Auditório A')">Agendar Esta Sala</button>
+        </div>
+        <div class="sala-card">
+          <h3>Sala de Reuniões B</h3>
+          <p>Local: Prédio C, 2º andar</p>
+          <p>Capacidade: 15 pessoas</p>
+          <p>Recursos: Mesa de reunião, Wi-Fi</p>
+          <button class="btn btn-primary btn-sm" onclick="agendarSala('Sala de Reuniões B')">Agendar Esta Sala</button>
+        </div>
+        <div class="sala-card">
+          <h3>Laboratório 201</h3>
+          <p>Local: Prédio D, 2º andar</p>
+          <p>Capacidade: 20 pessoas</p>
+          <p>Recursos: Computadores, Projetor</p>
+          <button class="btn btn-primary btn-sm" onclick="agendarSala('Laboratório 201')">Agendar Esta Sala</button>
+        </div>
+        <div class="sala-card">
+          <h3>Sala 103</h3>
+          <p>Local: Prédio A, 1º andar</p>
+          <p>Capacidade: 40 pessoas</p>
+          <p>Recursos: Projetor, Wi-Fi, Videoconferência</p>
+          <button class="btn btn-primary btn-sm" onclick="agendarSala('Sala 103')">Agendar Esta Sala</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function agendarSala(nomeSala) {
+      // Redireciona para agendar.html com o parâmetro da sala
+      window.location.href = `agendar.html?sala=${encodeURIComponent(nomeSala)}`;
+    }
+  </script>
+</body>
+</html>

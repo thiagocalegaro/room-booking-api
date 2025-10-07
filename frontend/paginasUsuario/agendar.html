@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Sala - UFSM</title>
+  <link rel="stylesheet" href="../css/geral.css">
+  <link rel="stylesheet" href="../css/agendar.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="../paginasUsuario/index.html">UFSM - Sistema de Agendamento</a>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="../paginasAuth/login.html">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="../paginasAuth/cadastro.html">Cadastro</a></li>
+        <li class="nav-item"><a class="nav-link" href="../paginasUsuario/agendar.html">Agendar Sala</a></li>
+        <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="py-5">
+    <div class="container mt-5 pt-5">
+      <h2 class="mb-4 text-center">Agendar Sala</h2>
+
+      <!-- Seleção da Sala -->
+      <div class="mb-4">
+        <label for="sala-select" class="form-label">Selecione a Sala</label>
+        <select id="sala-select" class="form-select">
+          <option value="" disabled selected>Escolha uma sala</option>
+        </select>
+      </div>
+
+      <!-- Informações da Sala -->
+      <div class="sala-info mb-4" style="display:none;">
+        <p><strong>Nome:</strong> <span id="sala-nome"></span></p>
+        <p><strong>Local:</strong> <span id="sala-local"></span></p>
+        <p><strong>Capacidade:</strong> <span id="sala-capacidade"></span></p>
+        <p><strong>Recursos:</strong> <span id="sala-recursos"></span></p>
+      </div>
+
+      <!-- Formulário de Agendamento -->
+      <form>
+        <div class="mb-3">
+          <label class="form-label">Horário</label>
+          <input type="time" class="form-control" id="hora">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Data</label>
+          <input type="date" class="form-control" id="data">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Confirmar Agendamento</button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    // Dados das salas
+    const salas = [
+      {nome: "Sala 101", local: "Prédio A, 1º andar", capacidade: "30 pessoas", recursos: "Projetor, Wi-Fi, Ar-condicionado"},
+      {nome: "Sala 102", local: "Prédio A, 1º andar", capacidade: "25 pessoas", recursos: "TV, Wi-Fi, Quadro branco"},
+      {nome: "Auditório A", local: "Prédio B, Térreo", capacidade: "100 pessoas", recursos: "Projetor, Som, Ar-condicionado"},
+      {nome: "Sala de Reuniões B", local: "Prédio C, 2º andar", capacidade: "15 pessoas", recursos: "Mesa de reunião, Wi-Fi"},
+      {nome: "Laboratório 201", local: "Prédio D, 2º andar", capacidade: "20 pessoas", recursos: "Computadores, Projetor"},
+      {nome: "Sala 103", local: "Prédio A, 1º andar", capacidade: "40 pessoas", recursos: "Projetor, Wi-Fi, Videoconferência"}
+    ];
+
+    const select = document.getElementById('sala-select');
+    const salaInfo = document.querySelector('.sala-info');
+
+    // Preenche o select com as salas
+    salas.forEach(sala => {
+      const option = document.createElement('option');
+      option.value = sala.nome;
+      option.textContent = sala.nome;
+      select.appendChild(option);
+    });
+
+    // Atualiza as informações quando a sala for selecionada
+    select.addEventListener('change', () => {
+      const salaSelecionada = salas.find(s => s.nome === select.value);
+      if (salaSelecionada) {
+        salaInfo.style.display = 'block';
+        document.getElementById('sala-nome').textContent = salaSelecionada.nome;
+        document.getElementById('sala-local').textContent = salaSelecionada.local;
+        document.getElementById('sala-capacidade').textContent = salaSelecionada.capacidade;
+        document.getElementById('sala-recursos').textContent = salaSelecionada.recursos;
+      }
+    });
+
+    // Seleciona automaticamente a sala se vier da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const salaNome = urlParams.get('sala');
+    if(salaNome) {
+      select.value = salaNome;
+      const event = new Event('change');
+      select.dispatchEvent(event); // atualiza informações
+    }
+  </script>
+</body>
+</html>
