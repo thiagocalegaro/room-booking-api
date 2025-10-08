@@ -34,7 +34,6 @@ jobs:
           pip install mkdocs-material
           pip install pymdown-extensions
 
-      # 4. Executa o comando de deploy do MkDocs
-      #    Ele irá construir o site e enviar para o branch 'gh-pages'
+      
       - name: Deploy documentation
         run: mkdocs gh-deploy --force --clean --message "Deploy documentation from commit {sha}"
