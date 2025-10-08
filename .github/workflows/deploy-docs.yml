@@ -1,0 +1,40 @@
+# Nome do Workflow que aparecerá na aba "Actions" do GitHub
+name: Deploy Documentation
+
+# Gatilho: Este workflow irá rodar toda vez que houver um 'push' no branch 'main'
+on:
+  push:
+    branches:
+      - main
+  # Permite que você rode este workflow manualmente pela aba Actions
+  workflow_dispatch:
+
+# Permissões necessárias para o job poder escrever no branch gh-pages
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    # O job irá rodar em uma máquina virtual Ubuntu mais recente
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Baixa o código do seu repositório para a máquina virtual
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      # 3. Instala as dependências do MkDocs (as mesmas que você instalou localmente)
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material
+          pip install pymdown-extensions
+
+      # 4. Executa o comando de deploy do MkDocs
+      #    Ele irá construir o site e enviar para o branch 'gh-pages'
+      - name: Deploy documentation
+        run: mkdocs gh-deploy --force --clean --message "Deploy documentation from commit {sha}"
