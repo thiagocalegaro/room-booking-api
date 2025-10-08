@@ -10,16 +10,14 @@ import { UsuariosService } from '../usuarios/usuarios.service';
 
 @Injectable()
 export class AgendamentosService {
-  // O construtor deve vir primeiro por convenção
   constructor(
     @InjectRepository(Agendamento)
     private agendamentosRepository: Repository<Agendamento>,
-    private salasService: SalasService, // Injete os serviços necessários
+    private salasService: SalasService, 
     private usuariosService: UsuariosService,
     private dataSource: DataSource,
   ) {}
   
-  // MÉTODO CREATE PARA AGENDAMENTO ÚNICO (IMPLEMENTADO)
   async create(dto: CreateAgendamentoDto): Promise<Agendamento> {
     const dataAgendamento = new Date(dto.data);
     const isDisponivel = await this.verificarDisponibilidade(
@@ -104,11 +102,11 @@ export class AgendamentosService {
         }
 
         const novoAgendamento = queryRunner.manager.create(Agendamento, {
-          data: dataDaSemana.toISOString().split('T')[0], // Converte para string 'YYYY-MM-DD'
+          data: dataDaSemana.toISOString().split('T')[0],
           hora_inicio: dto.hora_inicio,
           hora_fim: dto.hora_fim,
-          sala, // Atribui o objeto Sala, não o ID
-          usuario, // Atribui o objeto Usuario, não o ID
+          sala,
+          usuario, 
         });
 
         const agendamentoSalvo = await queryRunner.manager.save(novoAgendamento);
@@ -125,7 +123,6 @@ export class AgendamentosService {
     }
   }
 
-  // Métodos findAll, findOne, remove (ainda como placeholders)
   findAll() {
     return this.agendamentosRepository.find({ relations: ['sala', 'usuario'] });
   }
@@ -136,5 +133,16 @@ export class AgendamentosService {
 
   remove(id: number) {
     return this.agendamentosRepository.delete(id);
+  }
+
+  async findHorariosDisponiveis(codigo_sala: string, data: string) {
+    const agendamentos = await this.agendamentosRepository.find({
+      where: {
+        sala: { codigo: codigo_sala },
+        data: new Date(data),
+      },
+      order: { hora_inicio: 'ASC' },
+    });
+    return agendamentos.map(a => ({ hora_inicio: a.hora_inicio, hora_fim: a.hora_fim }));
   }
 }
