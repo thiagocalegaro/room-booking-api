@@ -1,7 +1,7 @@
 # Guia de Instalação e Execução Local
 
 Este guia descreve o passo a passo para configurar e executar o projeto em um ambiente de desenvolvimento local.
---- **API** disponível em `https://github.com/thiagocalegaro/room-booking-api`f
+--- **API** disponível em `https://github.com/thiagocalegaro/room-booking-api`
 
 ## 1. Pré-requisitos
 
@@ -78,4 +78,4 @@ Escolha uma das opções.
 
 ## 4. Executando o Frontend
 
-Abra o arquivo `.html`, clonado do repostitório `https://github.com/CTISM-Prof-Henry/trab-final-spi-quarteto-fantastico`, no navegador
+Abra o arquivo `frontend/paginasAuth/cadastro.html`, clonado do repostitório `https://github.com/CTISM-Prof-Henry/trab-final-spi-quarteto-fantastico`, no navegador

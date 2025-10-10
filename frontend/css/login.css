@@ -94,4 +94,9 @@
   .form-control {
     padding: 0.65rem;
   }
+  #logo .img-fluid {
+    max-width: 200px; /* << Defina o tamanho máximo que você quer para o logo no celular. Ajuste conforme necessário! */
+    margin-bottom: 2rem; /* Adiciona um espaço extra abaixo do logo, antes do formulário */
+  }
 }
+

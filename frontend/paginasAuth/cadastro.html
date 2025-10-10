@@ -14,41 +14,45 @@
     </div>
   </nav>
 
-  <section class="pt-5 mt-5" id="cadastro-section">
+  <!-- Formulário de Login -->
+  <section class="pt-5 mt-5">
     <div class="container">
-      <div class="d-flex justify-content-center">
-        <div class="w-100" style="max-width: 400px;">
+      <div class="layout-cadastro">
+      <div class="logo-container">
+                <img src="../images/UFSM_principal_cor.png" alt="Logo da UFSM" class="img-fluid">
+      </div>
+        <div class="form-container">
           <div class="card">
             <div class="card-body">
-              <h2 class="text-center text-primary mb-4">Cadastre-se</h2>
-              <form id="cadastro-form">
+              <h2 class="text-center text-primary mb-4">Cadastrar</h2>
+              <form id="login-form">
                 <div class="mb-3">
                   <label class="form-label">Nome</label>
-                  <input type="text" id="nome" class="form-control" placeholder="Digite seu nome" required>
+                  <input id="nome" type="etxt" class="form-control" placeholder="Digite seu nome">
                 </div>
                 <div class="mb-3">
                   <label class="form-label">E-mail</label>
-                  <input type="email" id="email" class="form-control" placeholder="exemplo@ufsm.br" required>
+                  <input id="email" type="email" class="form-control" placeholder="aluno@acad.ufsm.br">
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Senha</label>
-                  <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" required>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Confirmar senha</label>
-                <input type="password" id="confirmar-senha" class="form-control" placeholder="Repita sua senha" required>
-              </div>
+                  <input id="senha" type="password" class="form-control" placeholder="Digite sua senha">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Confirmar senha</label>
+                  <input id="confirmar-senha" type="password" class="form-control" placeholder="Repita sua senha">
+                </div>
+                <button class="btn btn-primary w-100">Cadastrar</button>
+              </form>
               <div id="mensagem" class="mb-3"></div>
-              <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
-            </form>
               <div class="text-center mt-3">
-                <small class="text-muted">Já tem uma conta? <a href="login.html" class="text-primary" id="link">Cadastre-se</a></small>
+                <small class="text-muted">Já tem conta? <a href="login.html" class="text-primary" id="link">Entre</a></small>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      </div>
   </section>
   <script src="../js/cadastro.js"></script>
 </body>
