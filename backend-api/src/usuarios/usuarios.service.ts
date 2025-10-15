@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
+import { Role } from './enums/role.enum';
 import { 
   Injectable, 
   UnauthorizedException, 
@@ -24,12 +25,17 @@ export class UsuariosService {
     if (usuarioExistente) {
       throw new ConflictException(`O email '${email}' já está em uso.`);
     }
+
+    const isFirstAccount = (await this.usuariosRepository.count()) === 0;  
+  // 2. Se for a primeira conta, define o tipo como Admin, senão, como User.
+  const tipo = isFirstAccount ? Role.Admin : Role.User;
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(createUsuarioDto.senha, saltRounds);
 
     const newUser = this.usuariosRepository.create({
       ...createUsuarioDto,
       senha: hashedPassword,
+      tipo : tipo,
     });
 
     return this.usuariosRepository.save(newUser);
@@ -54,5 +60,9 @@ export class UsuariosService {
     
     usuario.senha = "senha removida por segurança";
     return usuario;
+  }
+
+  async findAll(): Promise<Usuario[]>{
+    return this.usuariosRepository.find()
   }
 }

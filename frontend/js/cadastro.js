@@ -40,7 +40,7 @@ form.addEventListener('submit', async (event) => {
       body: JSON.stringify(dadosUsuario), // Converte o objeto JavaScript em uma string JSON
     });
 
-    const data = await response.json(); // Pega a resposta da API e a transforma em objeto
+    const data = await response.json();
 
     // 8. Trata a resposta da API
     if (response.ok) {
