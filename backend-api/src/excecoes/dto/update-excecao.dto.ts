@@ -3,10 +3,9 @@ import { CreateExcecaoDto } from './create-excecao.dto';
 import { TipoExcecao } from '../enums/tipo-excecao.enum';
 
 export class UpdateExcecaoDto extends PartialType(CreateExcecaoDto) {
-    codigo_sala?: string;
-    inicio?: string;
-    fim?: string;
-    motivo?: string;
-    tipo?: TipoExcecao;
-
+  codigo_sala?: string;
+  inicio?: string;
+  fim?: string;
+  motivo?: string;
+  tipo?: TipoExcecao;
 }

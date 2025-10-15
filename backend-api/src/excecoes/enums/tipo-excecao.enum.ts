@@ -1,4 +1,4 @@
 export enum TipoExcecao {
-    Bloqueio = 'bloqueio',
-    Dispobilidade_extra = 'extra'
+  Bloqueio = 'bloqueio',
+  Dispobilidade_extra = 'extra',
 }

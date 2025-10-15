@@ -39,8 +39,12 @@ describe('UsuariosService', () => {
 
   describe('login', () => {
     it('deve retornar um usuário quando as credenciais estiverem corretas', async () => {
-      const mockUser = { id: 1, email: 'teste@teste.com', senha: 'hashedPassword' } as Usuario;
-      
+      const mockUser = {
+        id: 1,
+        email: 'teste@teste.com',
+        senha: 'hashedPassword',
+      } as Usuario;
+
       mockUsuarioRepository.findOneBy.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
@@ -51,18 +55,26 @@ describe('UsuariosService', () => {
     });
 
     it('deve lançar UnauthorizedException se a senha estiver incorreta', async () => {
-      const mockUser = { id: 1, email: 'teste@teste.com', senha: 'hashedPassword' } as Usuario;
+      const mockUser = {
+        id: 1,
+        email: 'teste@teste.com',
+        senha: 'hashedPassword',
+      } as Usuario;
 
       mockUsuarioRepository.findOneBy.mockResolvedValue(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false); 
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login('teste@teste.com', 'senhaErrada')).rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login('teste@teste.com', 'senhaErrada'),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('deve lançar UnauthorizedException se o usuário não for encontrado', async () => {
-      mockUsuarioRepository.findOneBy.mockResolvedValue(null); 
+      mockUsuarioRepository.findOneBy.mockResolvedValue(null);
 
-      await expect(service.login('naoexiste@teste.com', 'qualquerSenha')).rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login('naoexiste@teste.com', 'qualquerSenha'),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

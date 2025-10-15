@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { AgendamentosService } from './agendamentos.service';
 import { CreateAgendamentoDto } from './dto/create-agendamento.dto';
 import { CreateAgendamentoRecorrenteDto } from './dto/create-agendamento-recorrente.dto';
@@ -36,7 +44,11 @@ export class AgendamentosController {
   }
 
   @Post('recorrente')
-  createRecorrente(@Body() createAgendamentoRecorrenteDto: CreateAgendamentoRecorrenteDto) {
-    return this.agendamentosService.createRecorrente(createAgendamentoRecorrenteDto);
+  createRecorrente(
+    @Body() createAgendamentoRecorrenteDto: CreateAgendamentoRecorrenteDto,
+  ) {
+    return this.agendamentosService.createRecorrente(
+      createAgendamentoRecorrenteDto,
+    );
   }
 }

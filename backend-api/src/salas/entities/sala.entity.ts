@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryColumn,
@@ -14,14 +13,14 @@ import { SalaRecurso } from './sala_recurso.entity';
 @Entity('salas')
 export class Sala {
   @PrimaryColumn({ type: 'varchar', length: 50 })
-  codigo: string; 
+  codigo: string;
 
   @Column({ type: 'text', nullable: false })
   tipo: string;
 
-  @Column({ type: 'int', nullable: false})
+  @Column({ type: 'int', nullable: false })
   capacidade: number;
-  
+
   @Column({ type: 'text', nullable: true })
   bloco: string;
 
@@ -37,10 +36,10 @@ export class Sala {
   @Column({ type: 'time', nullable: true, default: '18:00:00' })
   hora_fim: string;
 
-  @Column({ type: 'boolean', nullable: true ,default: false })
+  @Column({ type: 'boolean', nullable: true, default: false })
   disponivel_sabado: boolean;
 
-  @Column({ type: 'boolean', nullable: true ,default: false })
+  @Column({ type: 'boolean', nullable: true, default: false })
   disponivel_domingo: boolean;
 
   @OneToMany(() => Excecao, (excecao) => excecao.sala)

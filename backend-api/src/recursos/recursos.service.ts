@@ -6,11 +6,10 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class RecursosService {
-
   constructor(
-      @InjectRepository(Recurso)
-      private readonly salasRepository: Repository<Recurso>,
-    ) {}
+    @InjectRepository(Recurso)
+    private readonly salasRepository: Repository<Recurso>,
+  ) {}
   async create(createRecursoDto: CreateRecursoDto): Promise<Recurso> {
     const newRecurso = this.salasRepository.create(createRecursoDto);
     return this.salasRepository.save(newRecurso);

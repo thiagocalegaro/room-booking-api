@@ -6,7 +6,7 @@ import { Sala } from './entities/sala.entity';
 import { SalaRecurso } from './entities/sala_recurso.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Sala, SalaRecurso])], 
+  imports: [TypeOrmModule.forFeature([Sala, SalaRecurso])],
   controllers: [SalasController],
   providers: [SalasService],
   exports: [SalasService],

@@ -13,12 +13,11 @@ import { ExcluirExcecaoGlobalDto } from './dto/delete-excecao-global.dto';
 
 @Injectable()
 export class ExcecoesService {
-  
   constructor(
     private dataSource: DataSource,
     @InjectRepository(Excecao)
     private excecoesRepository: Repository<Excecao>,
-    private salasService: SalasService, 
+    private salasService: SalasService,
   ) {}
 
   async create(dto: CreateExcecaoDto): Promise<Excecao | Excecao[]> {
@@ -39,11 +38,15 @@ export class ExcecoesService {
 
   private async criarParaSalaUnica(dto: CreateExcecaoDto): Promise<Excecao> {
     if (!dto.codigo_sala) {
-      throw new BadRequestException('O campo "codigo_sala" é obrigatório para este escopo.');
+      throw new BadRequestException(
+        'O campo "codigo_sala" é obrigatório para este escopo.',
+      );
     }
     const sala = await this.salasService.findOne(dto.codigo_sala);
     if (!sala) {
-      throw new NotFoundException(`Sala com código ${dto.codigo_sala} não encontrada.`);
+      throw new NotFoundException(
+        `Sala com código ${dto.codigo_sala} não encontrada.`,
+      );
     }
 
     const novaExcecao = this.excecoesRepository.create({
@@ -58,11 +61,15 @@ export class ExcecoesService {
 
   private async criarParaBloco(dto: CreateExcecaoDto): Promise<Excecao[]> {
     if (!dto.bloco) {
-      throw new BadRequestException('O campo "bloco" é obrigatório para este escopo.');
+      throw new BadRequestException(
+        'O campo "bloco" é obrigatório para este escopo.',
+      );
     }
     const salasDoBloco = await this.salasService.findByBloco(dto.bloco);
     if (salasDoBloco.length === 0) {
-      throw new NotFoundException(`Nenhuma sala encontrada para o bloco ${dto.bloco}.`);
+      throw new NotFoundException(
+        `Nenhuma sala encontrada para o bloco ${dto.bloco}.`,
+      );
     }
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -70,30 +77,32 @@ export class ExcecoesService {
     const excecoesCriadas: Excecao[] = [];
 
     try {
-        for (const sala of salasDoBloco) {
-            const novaExcecao = this.excecoesRepository.create({
-                inicio: new Date(dto.inicio),
-                fim: new Date(dto.fim),
-                motivo: dto.motivo,
-                tipo: dto.tipo,
-                sala: sala, 
-            });
+      for (const sala of salasDoBloco) {
+        const novaExcecao = this.excecoesRepository.create({
+          inicio: new Date(dto.inicio),
+          fim: new Date(dto.fim),
+          motivo: dto.motivo,
+          tipo: dto.tipo,
+          sala: sala,
+        });
 
-            const excecaoSalva = await queryRunner.manager.save(novaExcecao);
-            excecoesCriadas.push(excecaoSalva);
-        }
+        const excecaoSalva = await queryRunner.manager.save(novaExcecao);
+        excecoesCriadas.push(excecaoSalva);
+      }
 
-        await queryRunner.commitTransaction();
-        return excecoesCriadas;
-
+      await queryRunner.commitTransaction();
+      return excecoesCriadas;
     } catch (error) {
-        await queryRunner.rollbackTransaction();
-        throw new InternalServerErrorException('Falha ao criar exceções para o bloco.', error);
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(
+        'Falha ao criar exceções para o bloco.',
+        error,
+      );
     } finally {
-        await queryRunner.release();
+      await queryRunner.release();
     }
   }
-  
+
   private async criarParaTodas(dto: CreateExcecaoDto): Promise<Excecao[]> {
     const todasAsSalas = await this.salasService.findAll();
     if (todasAsSalas.length === 0) {
@@ -106,25 +115,28 @@ export class ExcecoesService {
     const excecoesCriadas: Excecao[] = [];
 
     try {
-        for (const sala of todasAsSalas) {
-            const novaExcecao = this.excecoesRepository.create({
-                inicio: new Date(dto.inicio),
-                fim: new Date(dto.fim),
-                motivo: dto.motivo,
-                tipo: dto.tipo,
-                sala: sala,
-            });
+      for (const sala of todasAsSalas) {
+        const novaExcecao = this.excecoesRepository.create({
+          inicio: new Date(dto.inicio),
+          fim: new Date(dto.fim),
+          motivo: dto.motivo,
+          tipo: dto.tipo,
+          sala: sala,
+        });
 
-            const excecaoSalva = await queryRunner.manager.save(novaExcecao);
-            excecoesCriadas.push(excecaoSalva);
-        }
+        const excecaoSalva = await queryRunner.manager.save(novaExcecao);
+        excecoesCriadas.push(excecaoSalva);
+      }
 
-        await queryRunner.commitTransaction();
+      await queryRunner.commitTransaction();
     } catch (error) {
-        await queryRunner.rollbackTransaction();
-        throw new InternalServerErrorException('Falha ao criar exceções para o bloco.', error);
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(
+        'Falha ao criar exceções para o bloco.',
+        error,
+      );
     } finally {
-        await queryRunner.release();
+      await queryRunner.release();
     }
 
     return excecoesCriadas;
@@ -138,16 +150,17 @@ export class ExcecoesService {
   }
 
   async excluirEmLote(dto: ExcluirExcecaoGlobalDto): Promise<DeleteResult> {
-  
-  const resultado = await this.excecoesRepository.delete({
-    inicio: new Date(dto.inicio),
-    fim: new Date(dto.fim),
-    motivo: dto.motivo,
-  });
+    const resultado = await this.excecoesRepository.delete({
+      inicio: new Date(dto.inicio),
+      fim: new Date(dto.fim),
+      motivo: dto.motivo,
+    });
 
-  if (resultado.affected === 0) {
-    throw new NotFoundException(`Nenhuma exceção correspondente encontrada para exclusão.`);
-  }
+    if (resultado.affected === 0) {
+      throw new NotFoundException(
+        `Nenhuma exceção correspondente encontrada para exclusão.`,
+      );
+    }
 
     return resultado;
   }
@@ -162,7 +175,7 @@ export class ExcecoesService {
     });
     if (!excecao) {
       throw new NotFoundException(`Exceção com ID ${id} não encontrada.`);
-    } 
+    }
     return excecao;
   }
 

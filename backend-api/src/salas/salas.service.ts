@@ -23,7 +23,7 @@ export class SalasService {
     const newSala = this.salasRepository.create(createSalaDto);
     return this.salasRepository.save(newSala);
   }
-  
+
   findAllAtiva(): Promise<Sala[]> {
     return this.salasRepository.findBy({ isAtiva: true });
   }
@@ -31,7 +31,9 @@ export class SalasService {
   async findOne(codigo_sala: string): Promise<Sala> {
     const sala = await this.salasRepository.findOneBy({ codigo: codigo_sala });
     if (!sala) {
-      throw new ConflictException(`Sala com o código '${codigo_sala}' não encontrada.`);
+      throw new ConflictException(
+        `Sala com o código '${codigo_sala}' não encontrada.`,
+      );
     }
     return sala;
   }
@@ -41,7 +43,10 @@ export class SalasService {
   async findAll(): Promise<Sala[]> {
     return this.salasRepository.find();
   }
-  async update(codigo_sala: string, updateSalaDto: Partial<CreateSalaDto>): Promise<Sala> {
+  async update(
+    codigo_sala: string,
+    updateSalaDto: Partial<CreateSalaDto>,
+  ): Promise<Sala> {
     const sala = await this.findOne(codigo_sala);
     Object.assign(sala, updateSalaDto);
     return this.salasRepository.save(sala);

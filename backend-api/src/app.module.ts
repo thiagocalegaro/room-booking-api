@@ -14,16 +14,16 @@ import { AgendamentosModule } from './agendamentos/agendamentos.module';
 
 @Module({
   imports: [
-    ConfigModule  .forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'postgres', 
-      password: '1234',   
-      database: 'booking-system',          
+      username: 'postgres',
+      password: '1234',
+      database: 'booking-system',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, 
+      synchronize: true,
     }),
     SalasModule,
     UsuariosModule,

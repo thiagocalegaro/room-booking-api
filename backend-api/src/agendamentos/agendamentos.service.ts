@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
 import { addWeeks } from 'date-fns';
@@ -13,17 +17,17 @@ export class AgendamentosService {
   constructor(
     @InjectRepository(Agendamento)
     private agendamentosRepository: Repository<Agendamento>,
-    private salasService: SalasService, 
+    private salasService: SalasService,
     private usuariosService: UsuariosService,
     private dataSource: DataSource,
   ) {}
-  
+
   async create(dto: CreateAgendamentoDto): Promise<Agendamento> {
     const dataAgendamento = new Date(dto.data);
     const isDisponivel = await this.verificarDisponibilidade(
       dto.codigo_sala,
       dataAgendamento,
-      dto.hora_inicio,  
+      dto.hora_inicio,
       dto.hora_fim,
     );
 
@@ -33,12 +37,16 @@ export class AgendamentosService {
 
     const sala = await this.salasService.findOne(dto.codigo_sala);
     if (!sala) {
-      throw new NotFoundException(`Sala com código ${dto.codigo_sala} não encontrada.`);
+      throw new NotFoundException(
+        `Sala com código ${dto.codigo_sala} não encontrada.`,
+      );
     }
 
     const usuario = await this.usuariosService.findOne(dto.id_usuario);
     if (!usuario) {
-      throw new NotFoundException(`Usuário com ID ${dto.id_usuario} não encontrado.`);
+      throw new NotFoundException(
+        `Usuário com ID ${dto.id_usuario} não encontrado.`,
+      );
     }
 
     const novoAgendamento = this.agendamentosRepository.create({
@@ -69,7 +77,9 @@ export class AgendamentosService {
     return conflitos === 0;
   }
 
-  async createRecorrente(dto: CreateAgendamentoRecorrenteDto): Promise<Agendamento[]> {
+  async createRecorrente(
+    dto: CreateAgendamentoRecorrenteDto,
+  ): Promise<Agendamento[]> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -77,12 +87,16 @@ export class AgendamentosService {
     try {
       const sala = await this.salasService.findOne(dto.codigo_sala);
       if (!sala) {
-        throw new NotFoundException(`Sala com código ${dto.codigo_sala} não encontrada.`);
+        throw new NotFoundException(
+          `Sala com código ${dto.codigo_sala} não encontrada.`,
+        );
       }
 
       const usuario = await this.usuariosService.findOne(dto.id_usuario);
       if (!usuario) {
-        throw new NotFoundException(`Usuário com ID ${dto.id_usuario} não encontrado.`);
+        throw new NotFoundException(
+          `Usuário com ID ${dto.id_usuario} não encontrado.`,
+        );
       }
 
       const agendamentosCriados: Agendamento[] = [];
@@ -98,7 +112,9 @@ export class AgendamentosService {
           dto.hora_fim,
         );
         if (!isDisponivel) {
-          throw new ConflictException(`A sala já está ocupada na data ${dataDaSemana.toISOString().split('T')[0]}`);
+          throw new ConflictException(
+            `A sala já está ocupada na data ${dataDaSemana.toISOString().split('T')[0]}`,
+          );
         }
 
         const novoAgendamento = queryRunner.manager.create(Agendamento, {
@@ -106,10 +122,11 @@ export class AgendamentosService {
           hora_inicio: dto.hora_inicio,
           hora_fim: dto.hora_fim,
           sala,
-          usuario, 
+          usuario,
         });
 
-        const agendamentoSalvo = await queryRunner.manager.save(novoAgendamento);
+        const agendamentoSalvo =
+          await queryRunner.manager.save(novoAgendamento);
         agendamentosCriados.push(agendamentoSalvo);
       }
 
@@ -128,7 +145,10 @@ export class AgendamentosService {
   }
 
   findOne(id: number) {
-    return this.agendamentosRepository.findOne({ where: { id }, relations: ['sala', 'usuario'] });
+    return this.agendamentosRepository.findOne({
+      where: { id },
+      relations: ['sala', 'usuario'],
+    });
   }
 
   remove(id: number) {
@@ -143,6 +163,9 @@ export class AgendamentosService {
       },
       order: { hora_inicio: 'ASC' },
     });
-    return agendamentos.map(a => ({ hora_inicio: a.hora_inicio, hora_fim: a.hora_fim }));
+    return agendamentos.map((a) => ({
+      hora_inicio: a.hora_inicio,
+      hora_fim: a.hora_fim,
+    }));
   }
 }

@@ -4,10 +4,14 @@ import { AgendamentosController } from './agendamentos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Agendamento } from './entities/agendamento.entity';
 import { SalasModule } from '../salas/salas.module';
-import { UsuariosModule } from '../usuarios/usuarios.module'; 
+import { UsuariosModule } from '../usuarios/usuarios.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Agendamento]), SalasModule, UsuariosModule],
+  imports: [
+    TypeOrmModule.forFeature([Agendamento]),
+    SalasModule,
+    UsuariosModule,
+  ],
   controllers: [AgendamentosController],
   providers: [AgendamentosService],
 })

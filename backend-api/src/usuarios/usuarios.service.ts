@@ -4,12 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { Role } from './enums/role.enum';
-import { 
-  Injectable, 
-  UnauthorizedException, 
-  ConflictException // 1. Importe a ConflictException
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException, // 1. Importe a ConflictException
 } from '@nestjs/common';
-
 
 @Injectable()
 export class UsuariosService {
@@ -26,16 +25,19 @@ export class UsuariosService {
       throw new ConflictException(`O email '${email}' já está em uso.`);
     }
 
-    const isFirstAccount = (await this.usuariosRepository.count()) === 0;  
-  // 2. Se for a primeira conta, define o tipo como Admin, senão, como User.
-  const tipo = isFirstAccount ? Role.Admin : Role.User;
+    const isFirstAccount = (await this.usuariosRepository.count()) === 0;
+    // 2. Se for a primeira conta, define o tipo como Admin, senão, como User.
+    const tipo = isFirstAccount ? Role.Admin : Role.User;
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(createUsuarioDto.senha, saltRounds);
+    const hashedPassword = await bcrypt.hash(
+      createUsuarioDto.senha,
+      saltRounds,
+    );
 
     const newUser = this.usuariosRepository.create({
       ...createUsuarioDto,
       senha: hashedPassword,
-      tipo : tipo,
+      tipo: tipo,
     });
 
     return this.usuariosRepository.save(newUser);
@@ -52,17 +54,20 @@ export class UsuariosService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    const isPasswordMatching = await bcrypt.compare(senhaFornecida, usuario.senha);
+    const isPasswordMatching = await bcrypt.compare(
+      senhaFornecida,
+      usuario.senha,
+    );
 
     if (!isPasswordMatching) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
-    
-    usuario.senha = "senha removida por segurança";
+
+    usuario.senha = 'senha removida por segurança';
     return usuario;
   }
 
-  async findAll(): Promise<Usuario[]>{
-    return this.usuariosRepository.find()
+  async findAll(): Promise<Usuario[]> {
+    return this.usuariosRepository.find();
   }
 }

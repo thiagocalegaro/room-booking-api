@@ -8,18 +8,18 @@ import { Role } from '../usuarios/enums/role.enum';
 
 @Controller('salas')
 export class SalasController {
-    constructor(private readonly salasService: SalasService) {}
+  constructor(private readonly salasService: SalasService) {}
 
-    @Post()
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    create(@Body() createSalaDto : CreateSalaDto) {
-        return this.salasService.create(createSalaDto);
-    }
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  create(@Body() createSalaDto: CreateSalaDto) {
+    return this.salasService.create(createSalaDto);
+  }
 
-    @Get()
-    @UseGuards(JwtAuthGuard)
-    findAllAtiva() {
-        return this.salasService.findAllAtiva();
-    }
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  findAllAtiva() {
+    return this.salasService.findAllAtiva();
+  }
 }

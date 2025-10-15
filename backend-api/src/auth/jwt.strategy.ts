@@ -9,7 +9,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const secret = configService.get<string>('JWT_SECRET');
 
     if (!secret) {
-      throw new Error('Chave secreta JWT (JWT_SECRET) não foi encontrada no arquivo .env');
+      throw new Error(
+        'Chave secreta JWT (JWT_SECRET) não foi encontrada no arquivo .env',
+      );
     }
 
     super({

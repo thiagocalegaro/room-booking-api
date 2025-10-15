@@ -1,7 +1,13 @@
 // src/recursos/entities/sala-recurso.entity.ts
 
 import { Sala } from '../../salas/entities/sala.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Recurso } from '../../recursos/entities/recurso.entity';
 
 @Entity('sala_recursos')

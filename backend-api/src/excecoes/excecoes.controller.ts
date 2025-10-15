@@ -1,7 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ExcecoesService } from './excecoes.service';
 import { CreateExcecaoDto } from './dto/create-excecao.dto';
-import { UpdateExcecaoDto } from './dto/update-excecao.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guards';
 import { RolesGuard } from '../auth/guards/roles.guards';
 import { Roles } from '../auth/decorators/roles.decorator';

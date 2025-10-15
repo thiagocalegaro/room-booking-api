@@ -6,11 +6,11 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Role } from '../enums/role.enum'; 
+import { Role } from '../enums/role.enum';
 import { Agendamento } from '../../agendamentos/entities/agendamento.entity';
 
 @Entity('usuarios')
-export class Usuario { 
+export class Usuario {
   @PrimaryGeneratedColumn()
   id: number;
 

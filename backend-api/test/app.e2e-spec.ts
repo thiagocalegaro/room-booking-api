@@ -12,7 +12,7 @@ describe('Authentication (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
     await app.init();
@@ -24,23 +24,24 @@ describe('Authentication (e2e)', () => {
 
   //teste de login
 
-  it('POST /auth/login - Loga um usuário e retorna o token', () => {
+  it('POST /auth/login - testa login bem sucedido', () => {
     const loginDto = {
       email: 'thiago@admin.com',
-      senha: '123456', 
+      senha: '123456',
     };
 
-    return request(app.getHttpServer()) 
-      .post('/auth/login')              //endpoint
-      .send(loginDto)                   //corpo da requisição
-      .expect(200)                      
-      .expect((res) => {                //devolve o token
+    return request(app.getHttpServer())
+      .post('/auth/login') //endpoint
+      .send(loginDto) //corpo da requisição
+      .expect(200)
+      .expect((res) => {
+        //devolve o token
         expect(res.body).toHaveProperty('access_token');
         expect(typeof res.body.access_token).toBe('string');
       });
   });
 
-  it('POST /auth/login - Rejeita o login', () => {
+  it('POST /auth/login - testa o login inválido', () => {
     const loginDto = {
       email: 'usuarionaocadastrado@gmail.com',
       senha: 'senha',
@@ -52,6 +53,24 @@ describe('Authentication (e2e)', () => {
       .expect(401)
       .expect((res) => {
         expect(res.body.message).toEqual('Credenciais inválidas');
+      });
+  });
+
+  it('GET /salas/codigo - testa criar uma sala', () => {
+    const salaDto = {
+      codigo: 'g201',
+      bloco: 'G',
+      tipo: 'reunião',
+      capacidade: 30,
+      hora_inicio: '08:00',
+      hora_fim: '18:00',
+    };
+    return request(app.getHttpServer())
+      .post()
+      .send(salaDto)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toBe('string');
       });
   });
 });

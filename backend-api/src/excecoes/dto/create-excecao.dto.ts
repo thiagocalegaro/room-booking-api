@@ -9,11 +9,17 @@ export enum EscopoExcecao {
 }
 
 export class CreateExcecaoDto {
-  @IsDateString({}, { message: 'data_hora_inicio deve ser uma data ISO 8601 válida' })
+  @IsDateString(
+    {},
+    { message: 'data_hora_inicio deve ser uma data ISO 8601 válida' },
+  )
   @IsNotEmpty()
   inicio: string;
 
-  @IsDateString({}, { message: 'data_hora_fim deve ser uma data ISO 8601 válida' })
+  @IsDateString(
+    {},
+    { message: 'data_hora_fim deve ser uma data ISO 8601 válida' },
+  )
   @IsNotEmpty()
   fim: string;
 
@@ -30,13 +36,13 @@ export class CreateExcecaoDto {
   escopo: EscopoExcecao;
 
   // Campo obrigatório APENAS se o escopo for SALA_UNICA
-  @ValidateIf(o => o.escopo === EscopoExcecao.SALA_UNICA)
+  @ValidateIf((o) => o.escopo === EscopoExcecao.SALA_UNICA)
   @IsString()
   @IsNotEmpty()
   codigo_sala?: string;
 
   // Campo obrigatório APENAS se o escopo for BLOCO
-  @ValidateIf(o => o.escopo === EscopoExcecao.BLOCO)
+  @ValidateIf((o) => o.escopo === EscopoExcecao.BLOCO)
   @IsString()
   @IsNotEmpty()
   bloco?: string;
