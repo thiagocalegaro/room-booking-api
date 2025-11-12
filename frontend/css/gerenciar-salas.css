@@ -1,205 +1,328 @@
-/* ============================= */
-/* Gerenciar Salas - CSS */
-/* ============================= */
+/* css/gerenciar-salas.css */
 
-/* Botões da página de salas */
-.btn {
-  display: inline-block;
-  font-weight: 400;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: none;
-  transition: background-color 0.3s, transform 0.2s;
+/* ... (Todo o seu CSS de .page-header, .salas-grid-admin, .card-admin, etc. continua igual) ... */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+/* css/gerenciar-salas.css */
+
+/* --- GRID DE CARDS DAS SALAS --- */
+.salas-grid-admin {
+  display: grid;
+  /* MUDANÇA AQUI: Aumentamos a largura mínima de 300px para 450px.
+    Isso força o grid a criar menos colunas (2 na maioria dos desktops)
+    e, consequentemente, cards mais largos.
+  */
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 1.5rem;
 }
 
-.btn:focus {
-  outline: 3px solid rgba(0,0,0,0.2);
-  outline-offset: 2px;
-}
-
-.btn-success {
-  background-color: var(--success-color);
-  color: var(--white);
-}
-
-.btn-success:hover {
-  background-color: #157347;
-  transform: translateY(-2px);
-}
-
-.btn-warning {
-  background-color: var(--warning-color);
-  color: var(--dark-color);
-}
-
-.btn-warning:hover {
-  background-color: #e0a800;
-  transform: translateY(-1px);
-}
-
-.btn-danger {
-  background-color: var(--danger-color);
-  color: var(--white);
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
-  transform: translateY(-1px);
-}
-
-.btn-sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-}
-
-/* ============================= */
-/* Tabela de Salas */
-/* ============================= */
-.table-container {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+/* ... (seu .card-admin, .card-admin:hover, h3, p, badge, etc. continuam iguais) ... */
+.card-admin {
+  background-color: var(--white);
   border-radius: 8px;
   box-shadow: var(--shadow);
-  margin-top: 1rem;
-  background-color: var(--white);
-}
-
-.salas-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.salas-table th {
-  background-color: var(--primary-color);
-  color: var(--white);
-  padding: 1rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
   text-align: left;
-  font-weight: 600;
+}
+.card-admin:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+.card-admin h3 {
+  font-size: 1.25rem;
+  color: var(--dark-color);
+  margin-bottom: 0.75rem;
+}
+.card-admin p {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.25rem;
+}
+.card-details {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+.card-details li {
+  margin-bottom: 0.25rem;
+}
+.badge {
+  padding: 0.25em 0.6em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+.badge-success {
+  color: #0f5132;
+  background-color: #d1e7dd;
+}
+.badge-danger {
+  color: #842029;
+  background-color: #f8d7da;
 }
 
-.salas-table td {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.95rem;
+/* --- NOVO: Estilos para a lista de Recursos no Card --- */
+.card-recursos-titulo {
+  font-weight: 500;
+  color: var(--dark-color);
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
 }
 
-.salas-table tbody tr:hover {
-  background-color: #f8f9fa;
+.card-recursos-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
 }
 
-.salas-table tbody tr:last-child td {
-  border-bottom: none;
-}
 
-.actions {
+
+.card-content-wrapper {
   display: flex;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 1.5rem; /* Espaço entre as duas colunas */
+  margin-top: 1rem;
 }
 
-/* ============================= */
-/* Modais para Criar/Editar Salas */
-/* ============================= */
-.modal {
-  display: none; /* escondido por padrão */
+.card-col-details,
+.card-col-recursos {
+  flex: 1; /* Faz as duas colunas dividirem o espaço */
+  min-width: 0; /* Corrige problemas de quebra de linha do flexbox */
+}
+
+/* Modifica o título dos recursos para remover a borda superior,
+   pois agora ele está em uma coluna lateral */
+.card-recursos-titulo {
+  font-weight: 500;
+  color: var(--dark-color);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  /* Remove a borda e o padding que não fazem mais sentido */
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Garante que a lista de recursos compacta se ajuste */
+.card-recursos-compacto {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  line-height: 1.4;
+  word-break: break-word; /* Quebra o texto se a lista for muito longa */
+}
+
+.modal-backdrop {
   position: fixed;
-  z-index: 2000;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.5);
-  padding-top: 60px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  overflow-y: auto;
 }
-
-.modal-content {
+.modal {
   background-color: var(--white);
-  margin: 5% auto;
-  padding: 2rem;
-  border: 1px solid var(--border-color);
   width: 90%;
-  max-width: 500px;
+  max-width: 650px;
+  max-height: 90vh; /* Define a altura máxima do modal */
   border-radius: 8px;
-  box-shadow: var(--shadow);
-  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  margin: 2rem 0;
 }
-
-.modal-content h3 {
-  margin-bottom: 1rem;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.modal-header h2 {
+  font-size: 1.25rem;
   color: var(--primary-color);
-  font-size: 1.5rem;
-  text-align: center;
+}
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+.modal-body {
+  padding: 1.25rem 1.5rem; 
+  overflow-y: auto;}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background-color: #f8f9fa;
+  border-bottom-left-radius: 8px; 
+  border-bottom-right-radius: 8px;
+}
+.modal-backdrop.show {
+  display: flex;
 }
 
-.modal-content .mb-3 {
-  margin-bottom: 1rem;
+/* --- ESTILOS DO FORMULÁRIO --- */
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.form-row > * {
+  flex: 1;
+  min-width: 150px;
+}
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+.form-check-input {
+  width: 1.25em;
+  height: 1.25em;
+}
+.form-check-label {
+  margin-bottom: 0;
+  font-weight: 400;
 }
 
-.modal-content label {
-  display: block;
-  margin-bottom: 0.25rem;
+/* --- ESTILOS DOS BOTÕES DO MODAL (ATUALIZADO) --- */
+.modal-footer .btn-danger {
+  margin-right: auto; /* Alinha o botão de excluir à esquerda */
+  display: none;      /* Fica escondido por padrão */
+}
+.modal-footer .btn-danger.show {
+  display: inline-flex; /* 'inline-flex' é melhor para centralizar o ícone */
+  align-items: center;
+  justify-content: center;
+}
+
+/* NOVO: Estilo para botões que são só ícones */
+.btn-icon {
+  width: 2.5rem;  /* Largura fixa */
+  height: 2.5rem; /* Altura fixa */
+  padding: 0;     /* Remove padding que estica o botão */
+}
+
+/* Em css/gerenciar-salas.css */
+
+/* Linha divisória no formulário */
+.form-divider {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Container para os campos de quantidade dos recursos */
+#recursos-selecionados-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Estilo para cada item de recurso adicionado */
+.recurso-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #f8f9fa;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.recurso-item label {
+  flex: 1; /* Faz o nome do recurso ocupar o espaço */
+  margin-bottom: 0;
   font-weight: 500;
 }
 
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  transition: border-color 0.3s;
+.recurso-item input[type="number"] {
+  width: 80px; /* Largura fixa para o campo de quantidade */
+  flex: none;
 }
 
-.modal-content input:focus,
-.modal-content select:focus {
-  border-color: var(--primary-color);
-  outline: none;
-}
-
-/* Fechar modal */
-.close {
-  position: absolute;
-  top: 0.75rem;
-  right: 1rem;
-  color: var(--dark-color);
-  font-size: 1.5rem;
-  font-weight: bold;
+.recurso-item .btn-remover-recurso {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--danger-color); /* Usa a cor de perigo */
   cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  border-radius: 4px;
 }
 
-.close:hover {
-  color: var(--primary-color);
+.recurso-item .btn-remover-recurso:hover {
+  background-color: #f8d7da; /* Fundo vermelho claro ao passar o mouse */
 }
 
-
-@media (max-width: 768px) {
-  .actions {
-    flex-direction: column;
-  }
-
-  .btn-sm {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-  }
-
-  .modal-content {
-    padding: 1.5rem;
-  }
+#recursos-selecionados-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 200px; /* Altura máxima (ajuste conforme necessário) */
+  overflow-y: auto;   /* Barra de rolagem vertical */
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: #f8f9fa; /* Um leve fundo para diferenciar */
 }
 
-@media (max-width: 576px) {
-  .modal-content h3 {
-    font-size: 1.25rem;
-  }
+/* Garante que o item de recurso use o novo layout */
+.recurso-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+  background-color: transparent;
+}
 
-  .salas-table th,
-  .salas-table td {
-    padding: 0.75rem;
-    font-size: 0.85rem;
-  }
+.btn-danger {
+  /* Removido: position, top, right */
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.3s;
+  
+  /* Garante que ele seja um ícone quadrado bonito */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.btn-danger:hover {
+  color: var(--danger-color);
+  background-color: #f8d7da; /* Opcional: fundo vermelho claro no hover */
 }

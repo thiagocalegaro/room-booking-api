@@ -1,0 +1,58 @@
+/* Em css/painel-gerenciamento.css */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; /* 👈 MUDADO DE 'fixed' para 'auto' */
+}
+
+.data-table th,
+.data-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  /* 👇 REMOVIDO: 'white-space', 'overflow', 'text-overflow' daqui */
+}
+
+/* NOVO: Regra para a coluna Motivo (permite quebra de linha) */
+.data-table .col-motivo {
+  white-space: normal;
+  word-break: break-word; /* Quebra palavras longas se necessário */
+  min-width: 250px; /* Dá um bom espaço para o motivo */
+}
+
+/* NOVO: Regra para as outras colunas (mantém em linha única) */
+.data-table .col-tipo,
+.data-table .col-sala,
+.data-table .col-data {
+  white-space: nowrap;
+}
+
+.data-table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+.btn-danger {
+  /* Removido: position, top, right */
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.3s;
+  
+  /* Garante que ele seja um ícone quadrado bonito */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.btn-danger:hover {
+  color: var(--danger-color);
+  background-color: #f8d7da; /* Opcional: fundo vermelho claro no hover */
+}

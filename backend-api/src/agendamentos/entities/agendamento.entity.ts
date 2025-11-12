@@ -13,7 +13,9 @@ export class Agendamento {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Sala, (sala) => sala.agendamentos)
+  @ManyToOne(() => Sala, (sala) => sala.agendamentos, {
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'codigo_sala' })
   sala: Sala;
 

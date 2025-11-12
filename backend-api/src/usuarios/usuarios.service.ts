@@ -7,7 +7,8 @@ import { Role } from './enums/role.enum';
 import {
   Injectable,
   UnauthorizedException,
-  ConflictException, // 1. Importe a ConflictException
+  ConflictException,
+  NotFoundException // 1. Importe a ConflictException
 } from '@nestjs/common';
 
 @Injectable()
@@ -70,4 +71,11 @@ export class UsuariosService {
   async findAll(): Promise<Usuario[]> {
     return this.usuariosRepository.find();
   }
+
+  async remove(id: number): Promise<void> {
+    const resultado = await this.usuariosRepository.delete(id);
+
+    if (resultado.affected === 0) {
+      throw new NotFoundException(`Sala com código ${id} não encontrada.`);
+    }  }
 }

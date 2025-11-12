@@ -1,11 +1,13 @@
 import {
   IsDate,
-  IsDateString,
   IsInt,
   IsNotEmpty,
   IsString,
-  Matches,
+  IsEnum,
 } from 'class-validator';
+import { Turno } from '../enums/turno.enum';
+import { Type } from 'class-transformer';
+
 
 export class CreateAgendamentoDto {
   @IsString()
@@ -16,19 +18,12 @@ export class CreateAgendamentoDto {
   @IsNotEmpty()
   id_usuario: number;
 
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   data: Date;
 
-  @Matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'A hora de início deve estar no formato HH:mm.',
-  })
+  @IsEnum(Turno)
   @IsNotEmpty()
-  hora_inicio: string;
-
-  @Matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'A hora de início deve estar no formato HH:mm.',
-  })
-  @IsNotEmpty()
-  hora_fim: string;
+  turno: Turno;
 }

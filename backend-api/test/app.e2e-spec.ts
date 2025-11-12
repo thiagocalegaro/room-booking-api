@@ -56,21 +56,30 @@ describe('Authentication (e2e)', () => {
       });
   });
 
-  it('GET /salas/codigo - testa criar uma sala', () => {
-    const salaDto = {
-      codigo: 'g201',
-      bloco: 'G',
-      tipo: 'reunião',
-      capacidade: 30,
-      hora_inicio: '08:00',
-      hora_fim: '18:00',
-    };
-    return request(app.getHttpServer())
-      .post()
-      .send(salaDto)
-      .expect(200)
-      .expect((res) => {
-        expect(res.body).toBe('string');
-      });
+  // test/app.e2e-spec.ts
+
+// ... (dentro do describe('/salas', () => { ... }) )
+
+it('POST /salas - deve retornar 401 Unauthorized se nenhum token for enviado', () => {
+  // O DTO precisa ser válido para passar pela validação, mesmo que a autenticação falhe antes
+  const salaDto = {
+    codigo: 'G401-TEST-' + Date.now(),
+    capacidade: 10,
+    bloco: 'G',
+    tipo: 'teste',
+    hora_inicio: '08:00:00',
+    hora_fim: '18:00:00',
+    disponivel_sabado: false,
+    disponivel_domingo: false,
+    isAtiva: true,
+  };
+
+  return request(app.getHttpServer())
+    .post('/salas')
+    .send(salaDto)
+    .expect(401)
+    .expect((res) => {
+        expect(res.body.message).toEqual('Unauthorized');
+    });
   });
 });

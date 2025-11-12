@@ -1,49 +1,61 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsInt,
-  MinLength,
-  IsBoolean,
-  Min,
+// src/salas/dto/create-sala.dto.ts
+import { 
+  IsString, 
+  IsNotEmpty, 
+  IsInt, 
+  Min, 
+  IsBoolean, 
   IsOptional,
+  IsArray,       // 👈 Importe
+  ValidateNested // 👈 Importe
 } from 'class-validator';
+import { Type } from 'class-transformer'; // 👈 Importe
+import { RecursoQuantidadeDto } from './recurso-quantidade.dto'; // 👈 Importe o novo DTO
 
 export class CreateSalaDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(3)
   codigo: string;
 
-  @IsInt({ message: 'A capacidade deve ser um número inteiro.' })
-  @IsNotEmpty({ message: 'O campo capacidade não pode estar vazio.' })
-  @Min(1, { message: 'A capacidade deve ser pelo menos 1.' })
-  capacidade: number;
+  @IsString()
+  @IsNotEmpty()
+  tipo: string;
 
   @IsString()
   @IsOptional()
   bloco?: string;
 
-  @IsBoolean()
-  @IsOptional()
-  ativa?: boolean;
+  @IsInt()
+  @Min(1)
+  capacidade: number;
 
-  @IsString()
-  @IsOptional()
-  foto_url?: string;
-
-  @IsString()
-  @IsOptional()
+  @IsString() // Ou @Matches() para o formato HH:mm
+  @IsNotEmpty()
   hora_inicio: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   hora_fim: string;
 
   @IsBoolean()
   @IsOptional()
-  disponivel_sabado?: boolean;
+  disponivel_sabado: boolean;
 
   @IsBoolean()
   @IsOptional()
-  disponivel_domingo?: boolean;
+  disponivel_domingo: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  ativa: boolean;
+
+  // ... (outros campos se houver)
+
+  // --- 👇 ADICIONE ESTE BLOCO NO FINAL DA CLASSE 👇 ---
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true }) // Valida cada objeto dentro do array
+  @Type(() => RecursoQuantidadeDto) // Converte o objeto do payload para a classe
+  recursos: RecursoQuantidadeDto[];
+  // --- FIM DO BLOCO ---
 }

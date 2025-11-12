@@ -2,100 +2,69 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale-1.0">
   <title>Agendar Sala - UFSM</title>
+  <link rel="shortcut icon" type="imagex/png" href="../images/icon-logo-ufsm.ico">
   <link rel="stylesheet" href="../css/geral.css">
-  <link rel="stylesheet" href="../css/agendar.css">
+  <link rel="stylesheet" href="../css/painel-gerenciamento.css"> <link rel="stylesheet" href="../css/agendar.css"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="container">
-      <a class="navbar-brand" href="../paginasUsuario/index.html">UFSM - Sistema de Agendamento</a>
+      <a class="navbar-brand" href="index.html">UFSM | Sistema de Agendamento</a>
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="../paginasAuth/login.html">Meus agendamentos</a></li>
-        <li class="nav-item"><a class="nav-link" href="../paginasAuth/login.html">Sair</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html">Voltar para Salas</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" id="btn-sair">Sair</a></li>
       </ul>
     </div>
   </nav>
 
-  <section class="py-5">
-    <div class="container mt-5 pt-5">
-      <h2 class="mb-4 text-center">Agendar Sala</h2>
-
-      <!-- Seleção da Sala -->
-      <div class="mb-4">
-        <label for="sala-select" class="form-label">Selecione a Sala</label>
-        <select id="sala-select" class="form-select">
-          <option value="" disabled selected>Escolha uma sala</option>
-        </select>
+  <main class="container">
+  <header class="page-header">
+    <h1 class="text-primary" id="sala-nome-titulo">Carregando sala...</h1>
+  </header>
+  <div class="agendamento-container">
+    <div class="card">
+      <div class="card-body">
+        <form id="agendamento-form">
+          <div class="mb-3">
+            <label for="agendamento-data" class="form-label">1. Escolha a data (início):</label>
+            <input type="date" id="agendamento-data" class="form-control" required>
+          </div>
+          <hr class="form-divider">
+          <div class="mb-3">
+            <label for="agendamento-turno" class="form-label">2. Escolha um turno:</label>
+            <select id="agendamento-turno" class="form-control" required>
+              <option value="" disabled selected>-- Selecione --</option>
+              <option value="MANHA">Manhã (08:00 - 12:00)</option>
+              <option value="TARDE">Tarde (12:00 - 18:00)</option>
+              <option value="NOITE">Noite (17:00 - 23:00)</option>
+            </select>
+          </div>
+          <hr class="form-divider">
+          
+          <div class="form-check">
+            <input type="checkbox" id="agendamento-recorrente" class="form-check-input">
+            <label for="agendamento-recorrente" class="form-check-label">3. Repetir semanalmente</label>
+          </div>
+          
+          <div class="mb-3" id="campo-semanas" style="display: none; margin-top: 1rem;">
+            <label for="numero-semanas" class="form-label">Por quantas semanas?</label>
+            <input type="number" id="numero-semanas" class="form-control" value="2" min="2">
+          </div>
+          <div id="modal-mensagem" class="mt-3"></div>
+          <button type="submit" class="btn btn-primary w-100" id="btn-confirmar-agendamento">
+            Confirmar Agendamento
+          </button>
+        </form>
       </div>
-
-      <!-- Informações da Sala -->
-      <div class="sala-info mb-4" style="display:none;">
-        <p><strong>Nome:</strong> <span id="sala-nome"></span></p>
-        <p><strong>Local:</strong> <span id="sala-local"></span></p>
-        <p><strong>Capacidade:</strong> <span id="sala-capacidade"></span></p>
-        <p><strong>Recursos:</strong> <span id="sala-recursos"></span></p>
-      </div>
-
-      <!-- Formulário de Agendamento -->
-      <form>
-        <div class="mb-3">
-          <label class="form-label">Horário</label>
-          <input type="time" class="form-control" id="hora">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Data</label>
-          <input type="date" class="form-control" id="data">
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Confirmar Agendamento</button>
-      </form>
     </div>
-  </section>
+  </div>
+</main>
 
-  <script>
-    // Dados das salas
-    const salas = [
-      {nome: "Sala 101", local: "Prédio A, 1º andar", capacidade: "30 pessoas", recursos: "Projetor, Wi-Fi, Ar-condicionado"},
-      {nome: "Sala 102", local: "Prédio A, 1º andar", capacidade: "25 pessoas", recursos: "TV, Wi-Fi, Quadro branco"},
-      {nome: "Auditório A", local: "Prédio B, Térreo", capacidade: "100 pessoas", recursos: "Projetor, Som, Ar-condicionado"},
-      {nome: "Sala de Reuniões B", local: "Prédio C, 2º andar", capacidade: "15 pessoas", recursos: "Mesa de reunião, Wi-Fi"},
-      {nome: "Laboratório 201", local: "Prédio D, 2º andar", capacidade: "20 pessoas", recursos: "Computadores, Projetor"},
-      {nome: "Sala 103", local: "Prédio A, 1º andar", capacidade: "40 pessoas", recursos: "Projetor, Wi-Fi, Videoconferência"}
-    ];
-
-    const select = document.getElementById('sala-select');
-    const salaInfo = document.querySelector('.sala-info');
-
-    // Preenche o select com as salas
-    salas.forEach(sala => {
-      const option = document.createElement('option');
-      option.value = sala.nome;
-      option.textContent = sala.nome;
-      select.appendChild(option);
-    });
-
-    // Atualiza as informações quando a sala for selecionada
-    select.addEventListener('change', () => {
-      const salaSelecionada = salas.find(s => s.nome === select.value);
-      if (salaSelecionada) {
-        salaInfo.style.display = 'block';
-        document.getElementById('sala-nome').textContent = salaSelecionada.nome;
-        document.getElementById('sala-local').textContent = salaSelecionada.local;
-        document.getElementById('sala-capacidade').textContent = salaSelecionada.capacidade;
-        document.getElementById('sala-recursos').textContent = salaSelecionada.recursos;
-      }
-    });
-
-    // Seleciona automaticamente a sala se vier da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const salaNome = urlParams.get('sala');
-    if(salaNome) {
-      select.value = salaNome;
-      const event = new Event('change');
-      select.dispatchEvent(event); // atualiza informações
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="../js/jwt-decode.js"></script>
+  <script src="../js/agendar.js"></script>
 </body>
 </html>

@@ -2,15 +2,17 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  BadRequestException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
+import { DataSource, LessThan, MoreThan, Repository, MoreThanOrEqual } from 'typeorm';
 import { addWeeks } from 'date-fns';
 import { Agendamento } from './entities/agendamento.entity';
 import { CreateAgendamentoDto } from './dto/create-agendamento.dto';
 import { CreateAgendamentoRecorrenteDto } from './dto/create-agendamento-recorrente.dto';
 import { SalasService } from '../salas/salas.service'; // Importe os serviços
 import { UsuariosService } from '../usuarios/usuarios.service';
+import { Turno } from './enums/turno.enum';
 
 @Injectable()
 export class AgendamentosService {
@@ -23,41 +25,131 @@ export class AgendamentosService {
   ) {}
 
   async create(dto: CreateAgendamentoDto): Promise<Agendamento> {
+    
+    // 1. Traduz o turno para horas
+    let hora_inicio: string;
+    let hora_fim: string;
+    switch (dto.turno) {
+      case Turno.MANHA: hora_inicio = '08:00:00'; hora_fim = '12:00:00'; break;
+      case Turno.TARDE: hora_inicio = '12:00:00'; hora_fim = '18:00:00'; break;
+      case Turno.NOITE: hora_inicio = '18:00:00'; hora_fim = '23:00:00'; break;
+      default: throw new BadRequestException('Turno inválido.');
+    }
+
+    // 2. Busca a Sala PRIMEIRO
+    const sala = await this.salasService.findOne(dto.codigo_sala);
+    if (!sala) {
+      throw new NotFoundException(`Sala com código ${dto.codigo_sala} não encontrada.`);
+    }
+
+    // 3. ✨ NOVO: VERIFICA O HORÁRIO DE FUNCIONAMENTO DA SALA ✨
+    // (A comparação de strings HH:mm:ss funciona)
+    if (hora_inicio < sala.hora_inicio || hora_fim > sala.hora_fim) {
+      throw new ConflictException(
+        `O funcionamento desta sala é das ${sala.hora_inicio.substring(0,5)} às ${sala.hora_fim.substring(0,5)}.`
+      );
+    }
+    
+    // 4. Verifica conflitos com OUTROS agendamentos
     const dataAgendamento = new Date(dto.data);
     const isDisponivel = await this.verificarDisponibilidade(
       dto.codigo_sala,
       dataAgendamento,
-      dto.hora_inicio,
-      dto.hora_fim,
+      hora_inicio,
+      hora_fim,
     );
-
     if (!isDisponivel) {
       throw new ConflictException(`A sala já está ocupada neste horário.`);
     }
 
-    const sala = await this.salasService.findOne(dto.codigo_sala);
-    if (!sala) {
-      throw new NotFoundException(
-        `Sala com código ${dto.codigo_sala} não encontrada.`,
-      );
-    }
-
+    // 5. Busca o usuário
     const usuario = await this.usuariosService.findOne(dto.id_usuario);
     if (!usuario) {
-      throw new NotFoundException(
-        `Usuário com ID ${dto.id_usuario} não encontrado.`,
-      );
+      throw new NotFoundException(`Usuário com ID ${dto.id_usuario} não encontrado.`);
     }
 
+    // 6. Salva o agendamento
     const novoAgendamento = this.agendamentosRepository.create({
       data: dataAgendamento,
       sala,
       usuario,
-      hora_inicio: dto.hora_inicio,
-      hora_fim: dto.hora_fim,
+      hora_inicio,
+      hora_fim,
     });
-
     return this.agendamentosRepository.save(novoAgendamento);
+  }
+
+
+  // --- MÉTODO CREATE RECORRENTE (ATUALIZADO) ---
+  async createRecorrente(dto: CreateAgendamentoRecorrenteDto): Promise<Agendamento[]> {
+    const { codigo_sala, id_usuario, data, turno, numero_de_semanas } = dto;
+    
+    // 1. Traduz o turno para horas
+    let hora_inicio: string;
+    let hora_fim: string;
+    switch (turno) {
+      case Turno.MANHA: hora_inicio = '07:00:00'; hora_fim = '12:00:00'; break;
+      case Turno.TARDE: hora_inicio = '12:00:00'; hora_fim = '18:00:00'; break;
+      case Turno.NOITE: hora_inicio = '18:00:00'; hora_fim = '23:00:00'; break;
+      default: throw new BadRequestException('Turno inválido.');
+    }
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // 2. Busca as entidades fora do loop
+      const sala = await this.salasService.findOne(codigo_sala);
+      if (!sala) throw new NotFoundException(`Sala ${codigo_sala} não encontrada.`);
+      const usuario = await this.usuariosService.findOne(id_usuario);
+      if (!usuario) throw new NotFoundException(`Usuário ${id_usuario} não encontrado.`);
+
+      // 3. ✨ NOVO: VERIFICA O HORÁRIO DE FUNCIONAMENTO (ANTES DO LOOP) ✨
+      if (hora_inicio < sala.hora_inicio || hora_fim > sala.hora_fim) {
+        throw new ConflictException(
+          `Horário indisponível. O funcionamento desta sala é das ${sala.hora_inicio.substring(0,5)} às ${sala.hora_fim.substring(0,5)}.`
+        );
+      }
+
+      const agendamentosCriados: Agendamento[] = [];
+      const dataInicial = new Date(data);
+
+      // 4. Loop para criar os agendamentos semanais
+      for (let i = 0; i < numero_de_semanas; i++) {
+        const dataDaSemana = addWeeks(dataInicial, i);
+
+        // 5. Verifica a disponibilidade (conflitos com outros)
+        const isDisponivel = await this.verificarDisponibilidade(
+          codigo_sala,
+          dataDaSemana,
+          hora_inicio,
+          hora_fim,
+        );
+        if (!isDisponivel) {
+          throw new ConflictException(`A sala já está ocupada na data ${dataDaSemana.toISOString().split('T')[0]}`);
+        }
+
+        // 6. Cria o agendamento
+        const novoAgendamento = queryRunner.manager.create(Agendamento, {
+          data: dataDaSemana,
+          hora_inicio,
+          hora_fim,
+          sala,
+          usuario,
+        });
+        const agendamentoSalvo = await queryRunner.manager.save(novoAgendamento);
+        agendamentosCriados.push(agendamentoSalvo);
+      }
+
+      await queryRunner.commitTransaction();
+      return agendamentosCriados;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async verificarDisponibilidade(
@@ -77,72 +169,34 @@ export class AgendamentosService {
     return conflitos === 0;
   }
 
-  async createRecorrente(
-    dto: CreateAgendamentoRecorrenteDto,
-  ): Promise<Agendamento[]> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      const sala = await this.salasService.findOne(dto.codigo_sala);
-      if (!sala) {
-        throw new NotFoundException(
-          `Sala com código ${dto.codigo_sala} não encontrada.`,
-        );
-      }
-
-      const usuario = await this.usuariosService.findOne(dto.id_usuario);
-      if (!usuario) {
-        throw new NotFoundException(
-          `Usuário com ID ${dto.id_usuario} não encontrado.`,
-        );
-      }
-
-      const agendamentosCriados: Agendamento[] = [];
-      const dataInicial = new Date(dto.data);
-
-      for (let i = 0; i < dto.numero_de_semanas; i++) {
-        const dataDaSemana = addWeeks(dataInicial, i);
-
-        const isDisponivel = await this.verificarDisponibilidade(
-          dto.codigo_sala,
-          dataDaSemana,
-          dto.hora_inicio,
-          dto.hora_fim,
-        );
-        if (!isDisponivel) {
-          throw new ConflictException(
-            `A sala já está ocupada na data ${dataDaSemana.toISOString().split('T')[0]}`,
-          );
-        }
-
-        const novoAgendamento = queryRunner.manager.create(Agendamento, {
-          data: dataDaSemana.toISOString().split('T')[0],
-          hora_inicio: dto.hora_inicio,
-          hora_fim: dto.hora_fim,
-          sala,
-          usuario,
-        });
-
-        const agendamentoSalvo =
-          await queryRunner.manager.save(novoAgendamento);
-        agendamentosCriados.push(agendamentoSalvo);
-      }
-
-      await queryRunner.commitTransaction();
-      return agendamentosCriados;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+ 
+  async findAll() {
+    return this.agendamentosRepository.find({ relations: ['sala', 'usuario'],
+      order: { data: 'DESC' }
+     });
   }
 
-  findAll() {
-    return this.agendamentosRepository.find({ relations: ['sala', 'usuario'] });
-  }
+  // src/agendamentos/agendamentos.service.ts
+
+async findMy(userId: number): Promise<Agendamento[]> {
+  // 1. Cria um objeto Date para o dia de hoje
+  const today = new Date();
+  // 2. Define a hora para o início do dia (meia-noite)
+  today.setHours(0, 0, 0, 0); 
+
+  return this.agendamentosRepository.find({
+    where: {
+      usuario: { id: userId },
+      // 3. Agora a comparação é entre um Date e um objeto Date
+      data: MoreThanOrEqual(today), 
+    },
+    relations: ['sala'],
+    order: {
+      data: 'ASC',
+      hora_inicio: 'ASC',
+    },
+  });
+}
 
   findOne(id: number) {
     return this.agendamentosRepository.findOne({

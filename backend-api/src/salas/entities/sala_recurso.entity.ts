@@ -20,11 +20,15 @@ export class SalaRecurso {
 
   // --- Relacionamentos ---
 
-  @ManyToOne(() => Sala, (sala) => sala.salaRecursos)
-  @JoinColumn({ name: 'codigo_sala' }) // FK para a tabela de salas
+  @ManyToOne(() => Sala, (sala) => sala.salaRecursos, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'codigo_sala' })
   sala: Sala;
 
-  @ManyToOne(() => Recurso, (recurso) => recurso.salaRecursos)
-  @JoinColumn({ name: 'id_recurso' }) // FK para a tabela de recursos
+  @ManyToOne(() => Recurso, (recurso) => recurso.salaRecursos, {
+    onDelete: 'CASCADE' 
+  })
+  @JoinColumn({ name: 'id_recurso' })
   recurso: Recurso;
 }

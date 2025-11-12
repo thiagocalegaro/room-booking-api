@@ -14,7 +14,9 @@ export class Excecao {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Sala, (sala) => sala.excecoes)
+  @ManyToOne(() => Sala, (sala) => sala.excecoes, {
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'codigo_sala' })
   sala: Sala;
 
