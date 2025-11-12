@@ -119,7 +119,8 @@ function renderizarCards(salas) {
       
       todosRecursos.sort((a, b) => a.nome.localeCompare(b.nome));
 
-      recursosContainer.innerHTML = '';
+      // Constrói a lista permanente de inputs de recursos
+      recursosContainer.innerHTML = ''; // Limpa
       todosRecursos.forEach(recurso => {
         const novoCampo = `
           <div class="form-row recurso-item" data-recurso-id="${recurso.id}">
@@ -136,6 +137,7 @@ function renderizarCards(salas) {
     }
   }
 
+  // --- LÓGICA DE EDIÇÃO (MODIFICADA para incluir recursos) ---
   async function abrirModalParaEditar(codigo) {
     const token = localStorage.getItem('access_token');
     try {
@@ -146,6 +148,7 @@ function renderizarCards(salas) {
       
       const sala = await response.json();
 
+      // Preenche os dados da sala
       modalTitle.textContent = 'Editar Sala';
       btnSalvar.textContent = 'Atualizar';
       hiddenInput.value = sala.codigo;
@@ -160,9 +163,13 @@ function renderizarCards(salas) {
       document.getElementById('disponivel_domingo').checked = sala.disponivel_domingo;
       document.getElementById('ativa').checked = sala.isAtiva;
 
+      // --- NOVO: Preenche as quantidades de recursos existentes ---
+      // Reseta todos os campos de quantidade para 0
       const allInputs = recursosContainer.querySelectorAll('.recurso-item input');
       allInputs.forEach(input => input.value = 0);
 
+      // Preenche as quantidades dos recursos que a sala já possui
+      // (Supondo que a API retorne 'sala.recursos' no 'findOne')
       if (sala.recursos && sala.recursos.length > 0) {
         sala.recursos.forEach(rec => {
           const input = recursosContainer.querySelector(`[data-recurso-id="${rec.recurso.id}"] input`);
@@ -177,6 +184,7 @@ function renderizarCards(salas) {
     } catch (error) { alert(error.message); }
   }
 
+  // --- LÓGICA DE EXCLUSÃO (Sua função original) ---
   async function excluirSala(codigo) {
     const token = localStorage.getItem('access_token');
     if (!confirm(`Tem certeza que deseja excluir a sala ${codigo}?`)) {
@@ -193,14 +201,16 @@ function renderizarCards(salas) {
     } catch (error) { alert(error.message); }
   }
 
+  // --- NOVO: Função de carregamento de página unificada ---
   async function carregarPagina() {
+    // 1. Verifica o token e o tipo de usuário
     const token = localStorage.getItem('access_token');
     if (!token) {
       window.location.href = '../paginasAuth/login.html';
       return;
     }
     try {
-      const payload = jwt_decode.default(token);
+      const payload = jwt_decode.default(token); // Sua chamada correta
       if (payload.tipo !== 'admin') {
         alert('Acesso negado.');
         window.location.href = '../paginasUsuario/index.html';
@@ -213,7 +223,9 @@ function renderizarCards(salas) {
       return;
     }
 
+    // 2. Carrega tudo em paralelo (salas e recursos)
     try {
+      // Promise.all executa ambas as funções ao mesmo tempo
       await Promise.all([
         carregarSalas(),
         carregarRecursosDisponiveis()
@@ -223,6 +235,7 @@ function renderizarCards(salas) {
     }
   }
 
+  // (MODIFICADO) 'carregarSalas' agora só busca e renderiza as salas
   async function carregarSalas() {
     const token = localStorage.getItem('access_token');
     try {
@@ -237,6 +250,7 @@ function renderizarCards(salas) {
     }
   }
 
+  // --- EVENT LISTENERS ---
   document.getElementById('btn-adicionar-sala').addEventListener('click', abrirModal);
   document.getElementById('btn-fechar-modal').addEventListener('click', fecharModal);
   document.getElementById('btn-cancelar-modal').addEventListener('click', fecharModal);
@@ -253,11 +267,14 @@ function renderizarCards(salas) {
     }
   });
 
+  // --- SUBMIT DO FORMULÁRIO (MODIFICADO para incluir recursos) ---
   salaForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('access_token');
     const id = hiddenInput.value;
     const isEditMode = !!id;
+
+    // 1. Dados da Sala (Sua lógica original)
     const salaData = {
       codigo: document.getElementById('codigo').value,
       tipo: document.getElementById('tipo').value,
@@ -270,20 +287,23 @@ function renderizarCards(salas) {
       isAtiva: document.getElementById('ativa').checked,
     };
 
+    // 2. --- NOVO: Coleta os dados dos Recursos ---
     const recursosInput = recursosContainer.querySelectorAll('.recurso-item');
     const recursos = [];
     recursosInput.forEach(item => {
       const id = item.dataset.recursoId;
       const quantidade = parseInt(item.querySelector('input').value);
       
+      // Só envia para a API se a quantidade for maior que 0
       if (quantidade > 0) { 
         recursos.push({
-          id: parseInt(id),
+          id: parseInt(id), // API espera 'id'
           quantidade: quantidade
         });
       }
     });
     
+    // 3. --- NOVO: Combina tudo no payload final ---
     const payloadCompleto = {
       ...salaData,
       recursos: recursos
@@ -301,7 +321,7 @@ function renderizarCards(salas) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(payloadCompleto) 
+        body: JSON.stringify(payloadCompleto) // Envia o payload com os recursos
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -314,6 +334,7 @@ function renderizarCards(salas) {
     }
   });
 
+  // Listener do Grid (Sua lógica original)
   gridContainer.addEventListener('click', (event) => {
     const btnEditar = event.target.closest('.btn-editar');
     if (btnEditar) {
@@ -322,5 +343,6 @@ function renderizarCards(salas) {
     }
   });
 
-  carregarPagina();
+  // --- CARREGAMENTO INICIAL ---
+  carregarPagina(); // Chama a nova função que carrega tudo
 });
