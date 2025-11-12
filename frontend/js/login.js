@@ -1,5 +1,3 @@
-// js/login.js
-
 const form = document.getElementById('login-form');
 const mensagemDiv = document.getElementById('mensagem');
 
@@ -33,8 +31,6 @@ form.addEventListener('submit', async (event) => {
       localStorage.setItem('access_token', accessToken);
       
       setTimeout(() => {
-        // --- CORREÇÃO APLICADA AQUI ---
-        // A função global agora se chama 'jwtDecode'
         const payload = jwt_decode.default(accessToken);        
         const tipoUsuario = payload.tipo;
 

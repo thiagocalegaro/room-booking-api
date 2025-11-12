@@ -6,11 +6,11 @@ import {
   Min, 
   IsBoolean, 
   IsOptional,
-  IsArray,       // 👈 Importe
-  ValidateNested // 👈 Importe
+  IsArray,       
+  ValidateNested
 } from 'class-validator';
-import { Type } from 'class-transformer'; // 👈 Importe
-import { RecursoQuantidadeDto } from './recurso-quantidade.dto'; // 👈 Importe o novo DTO
+import { Type } from 'class-transformer';
+import { RecursoQuantidadeDto } from './recurso-quantidade.dto';
 
 export class CreateSalaDto {
   @IsString()
@@ -29,7 +29,7 @@ export class CreateSalaDto {
   @Min(1)
   capacidade: number;
 
-  @IsString() // Ou @Matches() para o formato HH:mm
+  @IsString()
   @IsNotEmpty()
   hora_inicio: string;
 
@@ -49,13 +49,9 @@ export class CreateSalaDto {
   @IsOptional()
   ativa: boolean;
 
-  // ... (outros campos se houver)
-
-  // --- 👇 ADICIONE ESTE BLOCO NO FINAL DA CLASSE 👇 ---
   @IsOptional()
   @IsArray()
-  @ValidateNested({ each: true }) // Valida cada objeto dentro do array
-  @Type(() => RecursoQuantidadeDto) // Converte o objeto do payload para a classe
+  @ValidateNested({ each: true }) 
+  @Type(() => RecursoQuantidadeDto) 
   recursos: RecursoQuantidadeDto[];
-  // --- FIM DO BLOCO ---
 }

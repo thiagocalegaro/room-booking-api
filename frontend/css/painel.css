@@ -1,17 +1,15 @@
 .dashboard-cards {
   margin-top: 50px;
-  display: flex;           /* 1. Ativa o Flexbox */
-  flex-wrap: wrap;         /* 2. Permite que os cards quebrem para a próxima linha */
-  justify-content: center; /* 3. A MÁGICA: Centraliza os cards em cada linha */
-  gap: 1.5rem;             /* Espaçamento entre os cards */
-  padding: 1rem 0;         /* Adiciona um respiro vertical */
+  display: flex;           
+  flex-wrap: wrap;         
+  justify-content: center; 
+  gap: 1.5rem;             
+  padding: 1rem 0;         
 }
 
 .card.nav-card {
-  /* 4. Define um tamanho base para os cards */
-  flex: 0 1 300px; /* Não cresce, pode encolher, base de 300px de largura */
+  flex: 0 1 300px; 
   margin: 5px;
-  /* O restante do seu estilo para os cards continua o mesmo */
   display: flex;
   flex-direction: column;
   justify-content: center;

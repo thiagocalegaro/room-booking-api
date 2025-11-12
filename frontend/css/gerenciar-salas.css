@@ -1,6 +1,3 @@
-/* css/gerenciar-salas.css */
-
-/* ... (Todo o seu CSS de .page-header, .salas-grid-admin, .card-admin, etc. continua igual) ... */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -9,20 +6,13 @@
   flex-wrap: wrap;
   gap: 1rem;
 }
-/* css/gerenciar-salas.css */
 
-/* --- GRID DE CARDS DAS SALAS --- */
 .salas-grid-admin {
   display: grid;
-  /* MUDANÇA AQUI: Aumentamos a largura mínima de 300px para 450px.
-    Isso força o grid a criar menos colunas (2 na maioria dos desktops)
-    e, consequentemente, cards mais largos.
-  */
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 1.5rem;
 }
 
-/* ... (seu .card-admin, .card-admin:hover, h3, p, badge, etc. continuam iguais) ... */
 .card-admin {
   background-color: var(--white);
   border-radius: 8px;
@@ -73,7 +63,6 @@
   background-color: #f8d7da;
 }
 
-/* --- NOVO: Estilos para a lista de Recursos no Card --- */
 .card-recursos-titulo {
   font-weight: 500;
   color: var(--dark-color);
@@ -96,34 +85,30 @@
 .card-content-wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 1.5rem; /* Espaço entre as duas colunas */
+  gap: 1.5rem; 
   margin-top: 1rem;
 }
 
 .card-col-details,
 .card-col-recursos {
-  flex: 1; /* Faz as duas colunas dividirem o espaço */
-  min-width: 0; /* Corrige problemas de quebra de linha do flexbox */
+  flex: 1; 
+  min-width: 0; 
 }
 
-/* Modifica o título dos recursos para remover a borda superior,
-   pois agora ele está em uma coluna lateral */
 .card-recursos-titulo {
   font-weight: 500;
   color: var(--dark-color);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
-  /* Remove a borda e o padding que não fazem mais sentido */
   border-top: none;
   padding-top: 0;
 }
 
-/* Garante que a lista de recursos compacta se ajuste */
 .card-recursos-compacto {
   font-size: 0.85rem;
   color: var(--secondary-color);
   line-height: 1.4;
-  word-break: break-word; /* Quebra o texto se a lista for muito longa */
+  word-break: break-word;
 }
 
 .modal-backdrop {
@@ -143,7 +128,7 @@
   background-color: var(--white);
   width: 90%;
   max-width: 650px;
-  max-height: 90vh; /* Define a altura máxima do modal */
+  max-height: 90vh; 
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -185,7 +170,6 @@
   display: flex;
 }
 
-/* --- ESTILOS DO FORMULÁRIO --- */
 .form-row {
   display: flex;
   gap: 1rem;
@@ -210,41 +194,34 @@
   font-weight: 400;
 }
 
-/* --- ESTILOS DOS BOTÕES DO MODAL (ATUALIZADO) --- */
 .modal-footer .btn-danger {
-  margin-right: auto; /* Alinha o botão de excluir à esquerda */
-  display: none;      /* Fica escondido por padrão */
+  margin-right: auto;
+  display: none;      
 }
 .modal-footer .btn-danger.show {
-  display: inline-flex; /* 'inline-flex' é melhor para centralizar o ícone */
+  display: inline-flex; 
   align-items: center;
   justify-content: center;
 }
 
-/* NOVO: Estilo para botões que são só ícones */
 .btn-icon {
-  width: 2.5rem;  /* Largura fixa */
-  height: 2.5rem; /* Altura fixa */
-  padding: 0;     /* Remove padding que estica o botão */
+  width: 2.5rem;  
+  height: 2.5rem; 
+  padding: 0;     
 }
 
-/* Em css/gerenciar-salas.css */
-
-/* Linha divisória no formulário */
 .form-divider {
   margin: 1.5rem 0;
   border: 0;
   border-top: 1px solid var(--border-color);
 }
 
-/* Container para os campos de quantidade dos recursos */
 #recursos-selecionados-container {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-/* Estilo para cada item de recurso adicionado */
 .recurso-item {
   display: flex;
   align-items: center;
@@ -255,13 +232,13 @@
 }
 
 .recurso-item label {
-  flex: 1; /* Faz o nome do recurso ocupar o espaço */
+  flex: 1;
   margin-bottom: 0;
   font-weight: 500;
 }
 
 .recurso-item input[type="number"] {
-  width: 80px; /* Largura fixa para o campo de quantidade */
+  width: 80px;
   flex: none;
 }
 
@@ -271,7 +248,7 @@
   justify-content: center;
   background: none;
   border: none;
-  color: var(--danger-color); /* Usa a cor de perigo */
+  color: var(--danger-color);
   cursor: pointer;
   padding: 0.25rem;
   margin-left: 0.5rem;
@@ -279,22 +256,21 @@
 }
 
 .recurso-item .btn-remover-recurso:hover {
-  background-color: #f8d7da; /* Fundo vermelho claro ao passar o mouse */
+  background-color: #f8d7da;
 }
 
 #recursos-selecionados-container {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-height: 200px; /* Altura máxima (ajuste conforme necessário) */
-  overflow-y: auto;   /* Barra de rolagem vertical */
+  max-height: 200px;
+  overflow-y: auto; 
   border: 1px solid var(--border-color);
   padding: 1rem;
   border-radius: 4px;
-  background-color: #f8f9fa; /* Um leve fundo para diferenciar */
+  background-color: #f8f9fa;
 }
 
-/* Garante que o item de recurso use o novo layout */
 .recurso-item {
   display: flex;
   align-items: center;
@@ -304,7 +280,6 @@
 }
 
 .btn-danger {
-  /* Removido: position, top, right */
   background: none;
   border: none;
   color: var(--secondary-color);
@@ -314,7 +289,6 @@
   z-index: 10;
   transition: color 0.3s;
   
-  /* Garante que ele seja um ícone quadrado bonito */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -324,5 +298,5 @@
 
 .btn-danger:hover {
   color: var(--danger-color);
-  background-color: #f8d7da; /* Opcional: fundo vermelho claro no hover */
+  background-color: #f8d7da; 
 }

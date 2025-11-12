@@ -191,7 +191,6 @@
 .form-check-input { width: 1.25em; height: 1.25em; }
 .form-check-label { margin-bottom: 0; font-weight: 400; }
 .btn-danger {
-  /* Removido: position, top, right */
   background: none;
   border: none;
   color: var(--secondary-color);
@@ -200,8 +199,6 @@
   cursor: pointer;
   z-index: 10;
   transition: color 0.3s;
-  
-  /* Garante que ele seja um ícone quadrado bonito */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -211,14 +208,9 @@
 
 .btn-danger:hover {
   color: var(--danger-color);
-  background-color: #f8d7da; /* Opcional: fundo vermelho claro no hover */
+  background-color: #f8d7da;
 }
 
-/* css/painel-gerenciamento.css */
-
-/* ... (seus estilos existentes) ... */
-
-/* Estilo para o checkbox de filtro */
 .form-check-inline {
   display: flex;
   align-items: center;
@@ -237,38 +229,29 @@
   font-weight: 500;
 }
 
-/* Em css/index-usuario.css */
 
-/* 1. Transforma o card em um flex container vertical */
 .agendamento-card-user {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Garante altura uniforme */
-  
-  /* Seus estilos existentes */
+  height: 100%; 
   background-color: var(--white);
   border-radius: 8px;
   box-shadow: var(--shadow);
   padding: 1.5rem;
   border-left: 5px solid var(--primary-color);
-  /* Removido 'position: relative;' se existia */
 }
 
-/* 2. Faz o conteúdo principal (texto) crescer */
 .card-content-main {
-  flex-grow: 1; /* Empurra o wrapper do botão para baixo */
+  flex-grow: 1; 
 }
 
-/* 3. Alinha o botão à direita */
 .card-button-wrapper {
   display: flex;
   justify-content: flex-end;
   margin-top: 1rem;
 }
 
-/* 4. Remove o 'position: absolute' do botão */
 .btn-excluir {
-  /* Removido: position, top, right */
   background: none;
   border: none;
   color: var(--secondary-color);
@@ -278,7 +261,6 @@
   z-index: 10;
   transition: color 0.3s;
   
-  /* Estilo do botão de ícone */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -291,7 +273,6 @@
   background-color: #f8d7da;
 }
 
-/* (O resto dos seus estilos .agendamento-card-user h3, p, etc. continua igual) */
 .agendamento-card-user h3 {
   font-size: 1.1rem;
   color: var(--primary-color);

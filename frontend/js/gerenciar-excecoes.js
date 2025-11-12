@@ -1,36 +1,28 @@
-// js/gerenciar-excecoes.js
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializa o seletor de data/hora
   flatpickr(".datetime-picker", {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
     time_24hr: true,
   });
 
-  // --- REFERÊNCIAS AOS ELEMENTOS ---
   const tableBody = document.getElementById('excecoes-table-body');
   const modalBackdrop = document.getElementById('modal-backdrop');
   const excecaoForm = document.getElementById('excecao-form');
   const mensagemModal = document.getElementById('modal-mensagem');
   
-  // Campos condicionais
   const escopoSelect = document.getElementById('escopo');
   const campoCodigoSala = document.getElementById('campo-codigo-sala');
   const campoBloco = document.getElementById('campo-bloco');
 
-  // --- FUNÇÕES DO MODAL ---
   const abrirModal = () => modalBackdrop.classList.add('show');
   const fecharModal = () => {
     modalBackdrop.classList.remove('show');
     excecaoForm.reset();
     mensagemModal.innerHTML = '';
-    // Reseta os campos condicionais
     campoCodigoSala.style.display = 'block';
     campoBloco.style.display = 'none';
   };
 
-  // --- RENDERIZAÇÃO DA TABELA ---
   function renderizarTabela(excecoes) {
     tableBody.innerHTML = '';
     if (excecoes.length === 0) {
@@ -39,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     excecoes.forEach(excecao => {
-      // Formata datas
       const inicioFmt = new Date(excecao.inicio).toLocaleString('pt-BR');
       const fimFmt = new Date(excecao.fim).toLocaleString('pt-BR');
       
@@ -61,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- LÓGICA DE EXCLUSÃO ---
   async function excluirExcecao(id) {
     const token = localStorage.getItem('access_token');
     if (!confirm(`Tem certeza que deseja excluir a exceção ID ${id}?`)) {
@@ -73,13 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!response.ok) throw new Error('Falha ao excluir a exceção.');
-      carregarPagina(); // Recarrega a lista
+      carregarPagina(); 
     } catch (error) {
       alert(error.message);
     }
   }
 
-  // --- LÓGICA DE CARREGAMENTO PRINCIPAL E AUTENTICAÇÃO ---
   async function carregarPagina() {
     const token = localStorage.getItem('access_token');
     
@@ -88,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      const payload = jwt_decode.default(token); // Use a chamada correta
+      const payload = jwt_decode.default(token); 
       if (payload.tipo !== 'admin') {
         alert('Acesso negado.');
         window.location.href = '../paginasUsuario/index.html';
@@ -101,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Carrega as exceções
     try {
       const response = await fetch('http://localhost:3000/excecoes', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -114,20 +102,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- EVENT LISTENERS ---
 
-  // Botões do Modal
   document.getElementById('btn-adicionar-excecao').addEventListener('click', abrirModal);
   document.getElementById('btn-fechar-modal').addEventListener('click', fecharModal);
   document.getElementById('btn-cancelar-modal').addEventListener('click', fecharModal);
 
-  // Botão Sair
   document.getElementById('btn-sair').addEventListener('click', () => {
     localStorage.removeItem('access_token');
     window.location.href = '../paginasAuth/login.html';
   });
 
-  // Listener do select de Escopo
   escopoSelect.addEventListener('change', () => {
     const escopo = escopoSelect.value;
     if (escopo === 'SALA_UNICA') {
@@ -142,12 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Evento de Submit do Formulário
   excecaoForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('access_token');
     
-    // Monta o payload com base no DTO que a API espera
     const payload = {
       motivo: document.getElementById('motivo').value,
       tipo: document.getElementById('tipo').value,
@@ -178,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Delegação de evento para os botões de excluir na tabela
   tableBody.addEventListener('click', (event) => {
     const btnExcluir = event.target.closest('.btn-excluir');
     if (btnExcluir) {
@@ -187,6 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- CARREGAMENTO INICIAL ---
   carregarPagina();
 });

@@ -35,13 +35,11 @@ export class CreateExcecaoDto {
   @IsNotEmpty()
   escopo: EscopoExcecao;
 
-  // Campo obrigatório APENAS se o escopo for SALA_UNICA
   @ValidateIf((o) => o.escopo === EscopoExcecao.SALA_UNICA)
   @IsString()
   @IsNotEmpty()
   codigo_sala?: string;
 
-  // Campo obrigatório APENAS se o escopo for BLOCO
   @ValidateIf((o) => o.escopo === EscopoExcecao.BLOCO)
   @IsString()
   @IsNotEmpty()

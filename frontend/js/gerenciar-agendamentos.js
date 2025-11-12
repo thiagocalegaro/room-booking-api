@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }
 
-  // --- LÓGICA DE CANCELAMENTO (Sem alteração) ---
   async function cancelarAgendamento(id) {
     const token = localStorage.getItem('access_token');
     if (!confirm(`Tem certeza que deseja cancelar o agendamento ID ${id}?`)) {
@@ -51,20 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!response.ok) throw new Error('Falha ao cancelar o agendamento.');
-      buscarErenderizarAgendamentos(); // Recarrega a lista
+      buscarErenderizarAgendamentos(); 
     } catch (error) {
       alert(error.message);
     }
   }
 
-  // --- LÓGICA DE CARREGAMENTO (SIMPLIFICADA) ---
   async function buscarErenderizarAgendamentos() {
     const token = localStorage.getItem('access_token');
     
     gridContainer.innerHTML = '<p class="text-center text-muted">Carregando agendamentos...</p>';
 
     try {
-      // 👇 CHAMA O ENDPOINT SEM FILTRO 👇
       const response = await fetch(`http://localhost:3000/agendamentos`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -73,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const agendamentos = await response.json();
       renderizarCards(agendamentos);
       
-      // Aplica o filtro de busca se já houver texto
       filtrarCardsEmTempoReal(); 
 
     } catch (error) {
@@ -81,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- FUNÇÃO DE VERIFICAÇÃO DE ACESSO (PARA ADMIN) ---
   function verificarAcesso() {
     const token = localStorage.getItem('access_token');
     if (!token) {
@@ -117,16 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- EVENT LISTENERS ---
   document.getElementById('btn-sair').addEventListener('click', () => {
     localStorage.removeItem('access_token');
     window.location.href = '../paginasAuth/login.html';
   });
   
-  // 👇 O listener do checkbox foi REMOVIDO
-  
-  // 👇 ADICIONADO o listener para a barra de busca
-  searchBar.addEventListener('input', filtrarCardsEmTempoReal);
+    searchBar.addEventListener('input', filtrarCardsEmTempoReal);
   
   gridContainer.addEventListener('click', (event) => {
     const btnCancelar = event.target.closest('.btn-excluir');
@@ -136,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- CARREGAMENTO INICIAL ---
   if (verificarAcesso()) {
     buscarErenderizarAgendamentos();
   }

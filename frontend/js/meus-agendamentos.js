@@ -1,8 +1,6 @@
 // js/meus-agendamentos.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // --- REFERÊNCIAS AOS ELEMENTOS ---
-  // 👇 MODIFICADO: Trocamos a referência da tabela pelo grid
   const gridContainer = document.getElementById('agendamentos-grid-container');
 
   function renderizarCards(agendamentos) {
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   }
 
-  // --- LÓGICA DE CANCELAMENTO (Sem alteração) ---
   async function cancelarAgendamento(id) {
     const token = localStorage.getItem('access_token');
     if (!confirm(`Tem certeza que deseja cancelar o agendamento?`)) {
@@ -45,13 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!response.ok) throw new Error('Falha ao cancelar o agendamento.');
-      carregarPagina(); // Recarrega a lista
+      carregarPagina();
     } catch (error) {
       alert(error.message);
     }
   }
 
-  // --- LÓGICA DE CARREGAMENTO PRINCIPAL E AUTENTICAÇÃO ---
   async function carregarPagina() {
     const token = localStorage.getItem('access_token');
     
@@ -71,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Carrega os agendamentos do usuário
     try {
       const response = await fetch('http://localhost:3000/agendamentos/meus', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -79,21 +74,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!response.ok) throw new Error('Falha ao carregar seus agendamentos.');
       
       const agendamentos = await response.json();
-      renderizarCards(agendamentos); // Chama a nova função de renderização
+      renderizarCards(agendamentos); 
 
     } catch (error) {
       gridContainer.innerHTML = `<p class="text-center text-danger">${error.message}</p>`;
     }
   }
 
-  // --- EVENT LISTENERS ---
-
   document.getElementById('btn-sair').addEventListener('click', () => {
     localStorage.removeItem('access_token');
     window.location.href = '../paginasAuth/login.html';
   });
   
-  // 👇 MODIFICADO: Agora escuta os cliques no 'gridContainer'
   gridContainer.addEventListener('click', (event) => {
     const btnCancelar = event.target.closest('.btn-excluir');
     if (btnCancelar) {
@@ -102,6 +94,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- CARREGAMENTO INICIAL ---
   carregarPagina();
 });

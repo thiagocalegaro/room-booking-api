@@ -44,11 +44,10 @@ export class SalasController {
     return this.salasService.update(id, updateSalaDto);
   }
 
-  // 👇 ENDPOINT DE DELETE 👇
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  @HttpCode(HttpStatus.NO_CONTENT) // Retorna 204 No Content (sucesso, sem corpo)
+  @HttpCode(HttpStatus.NO_CONTENT) 
   remove(@Param('id') id: string) {
     return this.salasService.remove(id);
   }

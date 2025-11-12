@@ -103,7 +103,6 @@
 
 .agendamentos-grid-user {
   display: grid;
-  /* Cria 3 colunas, mas permite que elas quebrem em telas menores */
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
 }

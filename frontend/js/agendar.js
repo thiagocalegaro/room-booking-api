@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- VERIFICAÇÃO DE ACESSO ---
   function verificarAcesso() {
     const token = localStorage.getItem('access_token');
     if (!token) {
@@ -60,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
     const payload = jwt_decode.default(token);
     
-    // Pega os dados dos inputs
     const data = document.getElementById('agendamento-data').value;
     const turno = document.getElementById('agendamento-turno').value;
     const isRecorrente = checkRecorrente.checked; 
@@ -86,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
     } else {
-      // Se for único, chama o endpoint normal
       url = 'http://localhost:3000/agendamentos';
       
       body = JSON.stringify({
@@ -128,12 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   checkRecorrente.addEventListener('change', () => {
     if (checkRecorrente.checked) {
-      campoSemanas.style.display = 'block'; // Mostra o campo
+      campoSemanas.style.display = 'block'; 
     } else {
-      campoSemanas.style.display = 'none'; // Esconde o campo
+      campoSemanas.style.display = 'none'; 
     }
   });
 
-  // --- CARREGAMENTO INICIAL ---
   carregarPagina();
 });

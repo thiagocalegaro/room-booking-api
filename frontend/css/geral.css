@@ -1,4 +1,3 @@
-  /* Reset e configurações básicas */
   * {
     margin: 0;
     padding: 0;
@@ -34,7 +33,6 @@
   }
 
 
-  /* Container */
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -45,7 +43,6 @@
     text-decoration: underline;
   }
 
-  /* Navbar */
   .navbar {
     background-color: var(--primary-color);
     color: var(--white);
@@ -86,7 +83,6 @@
     color: rgba(255, 255, 255, 0.8);
   }
 
-  /* Responsividade Navbar */
   @media (max-width: 768px) {
     .navbar .container {
       flex-direction: column;
@@ -117,7 +113,6 @@
     }
   }
 
-  /* Botões globais */
   .btn {
     display: inline-block;
     font-weight: 400;
@@ -150,98 +145,82 @@
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
   }
-  /* Em geral.css */
-
-/* --- LAYOUT PRINCIPAL (LOGO + FORMULÁRIO) --- */
 
 .layout-cadastro {
   display: flex;
-  /* A MUDANÇA PRINCIPAL ESTÁ AQUI 👇 */
-  align-items: flex-start; /* Alinha os itens pelo topo */
+  align-items: flex-start; 
   justify-content: space-around;
   gap: 2rem;
   flex-wrap: wrap;
   padding: 2rem 0;
 }
 
-/* Os filhos não precisam mais ser flex containers, eles apenas ocupam seu espaço */
 .logo-container,
 .form-container {
   flex: 1;
   min-width: 350px;
-  /* As regras de 'display: flex' foram removidas daqui */
 }
 
 .logo-container .img-fluid {
   max-width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto; /* Centraliza a imagem dentro da sua coluna */
+  margin: 0 auto; 
 }
 
 .form-container .card {
   width: 100%;
   max-width: 450px;
-  margin: 0 auto; /* Centraliza o card se a coluna for mais larga */
+  margin: 0 auto; 
 }
 
 
 @media (max-width: 992px) {
-  /* Remove o padding do topo do body para a navbar não criar um espaço extra */
   body {
     padding-top: 0;
   }
 
-  /* Faz a navbar voltar a ser estática para não sobrepor o conteúdo */
   .navbar {
     position: static; 
   }
 
   .layout-cadastro {
-    flex-direction: column; /* Coloca o logo acima do formulário */
-    align-items: center;   /* Centraliza os itens */
-    padding: 1rem 0;       /* Reduz o espaçamento vertical */
-    gap: 1rem;             /* Reduz o espaço entre o logo e o formulário */
+    flex-direction: column; 
+    align-items: center;   
+    padding: 1rem 0;       
+    gap: 1rem;             
   }
 
   .logo-container {
-    margin-bottom: 1rem; /* Adiciona um espaço abaixo do logo */
+    margin-bottom: 1rem; 
   }
 
   .logo-container .img-fluid {
-    max-width: 200px; /* 👈 Aumenta o tamanho do logo no mobile */
+    max-width: 200px;
   }
 
-  /* Garante que a coluna do formulário ocupe a largura disponível */
   .form-container {
     width: 100%;
-    padding: 0 1rem; /* Adiciona um respiro nas laterais do formulário */
+    padding: 0 1rem; 
   }
 }
-  /* css/cadastro.css */
-/* Este arquivo serve para sobrescrever as regras gerais e ajustar
-   detalhes específicos da página de cadastro. */
-
-/* Reduz o padding (espaçamento interno) do card do formulário */
+  
 .form-container .card-body {
   padding: 1.5rem;
 }
 
-/* Diminui o espaço ENTRE os campos do formulário (Nome, E-mail, Senha...) */
 .form-container .mb-3 {
   margin-bottom: 0.85rem;
 }
 
-/* Torna os campos de input um pouco menos altos */
 .form-container .form-control {
   padding: 0.6rem 0.75rem;
-  font-size: 0.95rem; /* Opcional: diminui um pouco a fonte dentro do input */
+  font-size: 0.95rem; 
 }
 
-/* Torna o botão um pouco menos alto */
 .form-container .btn {
   padding: 0.7rem 1.5rem;
-  margin-top: 0.5rem; /* Adiciona um pequeno espaço acima do botão */
+  margin-top: 0.5rem; 
 }
 
 .spinner-container {
@@ -252,22 +231,20 @@
 }
 
 .spinner {
-  width: 2rem; /* Tamanho do spinner */
+  width: 2rem; 
   height: 2rem;
-  border: 4px solid rgba(0, 0, 0, 0.1); /* Cor da borda 'traseira' */
-  border-left-color: var(--primary-color); /* Cor da parte que gira */
+  border: 4px solid rgba(0, 0, 0, 0.1); 
+  border-left-color: var(--primary-color);
   border-radius: 50%;
-  animation: spin 1s linear infinite; /* Aplica a animação */
+  animation: spin 1s linear infinite; 
 }
 
-/* Animação que faz o spinner girar */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Em geral.css */
 
 .alert {
   height: 40px;
@@ -290,13 +267,6 @@
   background-color: #00c756;
 }
 
-  
-/* =============================================== */
-/* --- COMPONENTES DE FORMULÁRIO E CARD --- */
-/* (Garanta que este bloco de código exista) */
-/* =============================================== */
-
-/* --- Card --- */
 .card {
   background-color: var(--white);
   border-radius: 8px;
@@ -311,7 +281,6 @@
   padding: 1.5rem;
 }
 
-/* --- Formulário --- */
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
@@ -324,7 +293,6 @@
 }
 
 .form-control {
-  /* Esta é a regra principal que está faltando */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -349,7 +317,6 @@
 }
 
 
-/* --- Utilitários de Texto e Espaçamento --- */
 .text-center { text-align: center; }
 .text-primary { color: var(--primary-color); }
 .text-muted { color: #6c757d; }
@@ -360,6 +327,6 @@
 
 .search-wrapper {
   margin-bottom: 1.5rem;
-  max-width: 600px; /* Define uma largura máxima para a barra */
+  max-width: 600px; 
 }
 

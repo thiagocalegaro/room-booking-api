@@ -1,16 +1,12 @@
-// js/gerenciar-recursos.js
-
 document.addEventListener('DOMContentLoaded', () => {
-  // --- REFERÊNCIAS AOS ELEMENTOS ---
   const modalBackdrop = document.getElementById('modal-backdrop');
   const btnAdicionar = document.getElementById('btn-adicionar-recurso');
   const btnFecharModal = document.getElementById('btn-fechar-modal');
   const btnCancelarModal = document.getElementById('btn-cancelar-modal');
   const recursoForm = document.getElementById('recurso-form');
-  const tableBody = document.getElementById('recursos-table-body'); // Movido para o topo
+  const tableBody = document.getElementById('recursos-table-body');
   const mensagemModal = document.getElementById('modal-mensagem');
 
-  // --- FUNÇÕES DO MODAL ---
   const abrirModal = () => modalBackdrop.classList.add('show');
   const fecharModal = () => {
     modalBackdrop.classList.remove('show');
@@ -18,9 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mensagemModal.innerHTML = '';
   };
 
-  // --- RENDERIZAÇÃO DA TABELA ---
   function renderizarTabela(recursos) {
-    tableBody.innerHTML = ''; // Limpa a tabela
+    tableBody.innerHTML = ''; 
     if (recursos.length === 0) {
       tableBody.innerHTML = '<tr><td colspan="3" class="text-center">Nenhum recurso cadastrado.</td></tr>';
       return;
@@ -41,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- LÓGICA DE EXCLUSÃO (A PARTE QUE FALTAVA) ---
   async function excluirRecurso(id) {
     const token = localStorage.getItem('access_token');
     if (!confirm(`Tem certeza que deseja excluir o recurso ID ${id}?`)) {
@@ -53,17 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!response.ok) throw new Error('Falha ao excluir o recurso.');
-      carregarRecursos(); // Recarrega a lista
+      carregarRecursos(); 
     } catch (error) {
       alert(error.message);
     }
   }
 
-  // --- LÓGICA DE CARREGAMENTO PRINCIPAL E AUTENTICAÇÃO ---
   async function carregarRecursos() {
     const token = localStorage.getItem('access_token');
     
-    // Proteção de rota
     if (!token) {
       window.location.href = '../paginasAuth/login.html';
       return;
@@ -81,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Carregar os recursos da API
     try {
       const response = await fetch('http://localhost:3000/recursos', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -94,20 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- EVENT LISTENERS ---
 
-  // Botões do Modal
   btnAdicionar.addEventListener('click', abrirModal);
   btnFecharModal.addEventListener('click', fecharModal);
   btnCancelarModal.addEventListener('click', fecharModal);
   
-  // Botão Sair
   document.getElementById('btn-sair').addEventListener('click', () => {
     localStorage.removeItem('access_token');
     window.location.href = '../paginasAuth/login.html';
   });
 
-  // Evento de Submit do Formulário (Salvar novo recurso)
   recursoForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const nomeRecurso = document.getElementById('nome-recurso').value;
@@ -128,23 +115,21 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(errorData.message || 'Falha ao salvar o recurso.');
       }
       fecharModal();
-      carregarRecursos(); // Recarrega a lista
+      carregarRecursos(); 
 
     } catch (error) {
       mensagemModal.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
     }
   });
 
-  // --- DELEGAÇÃO DE EVENTO PARA EXCLUSÃO (A PARTE QUE FALTAVA) ---
   tableBody.addEventListener('click', (event) => {
-    const btnExcluir = event.target.closest('.btn-excluir'); // Procura pelo botão de excluir
+    const btnExcluir = event.target.closest('.btn-excluir');
     
     if (btnExcluir) {
-      const id = btnExcluir.dataset.id; // Pega o ID do atributo data-id
+      const id = btnExcluir.dataset.id; 
       excluirRecurso(id);
     }
   });
 
-  // --- CARREGAMENTO INICIAL ---
-  carregarRecursos(); // Chama a função principal
+  carregarRecursos();
 });

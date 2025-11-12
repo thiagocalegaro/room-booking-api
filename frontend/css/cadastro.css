@@ -1,8 +1,4 @@
-/* =============================================== */
-/* --- COMPONENTES E UTILITÁRIOS (ADICIONAR) --- */
-/* =============================================== */
 
-/* --- Card --- */
 .card {
   background-color: var(--white);
   border-radius: 8px;
@@ -17,7 +13,6 @@
   padding: 2rem;
 }
 
-/* --- Formulário --- */
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
@@ -41,7 +36,6 @@
 }
 
 
-/* --- Utilitários de Texto e Espaçamento --- */
 .text-center { text-align: center; }
 .text-primary { color: var(--primary-color); }
 .text-muted { color: #6c757d; }
@@ -52,7 +46,6 @@
 .pt-5 { padding-top: 3rem; }
 .w-100 { width: 100%; }
 
-/* Ajustes de responsividade para o formulário em telas pequenas */
 @media (max-width: 576px) {
   .card-body {
     padding: 1.5rem;

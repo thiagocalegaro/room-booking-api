@@ -36,21 +36,17 @@ export class AgendamentosService {
       default: throw new BadRequestException('Turno inválido.');
     }
 
-    // 2. Busca a Sala PRIMEIRO
     const sala = await this.salasService.findOne(dto.codigo_sala);
     if (!sala) {
       throw new NotFoundException(`Sala com código ${dto.codigo_sala} não encontrada.`);
     }
 
-    // 3. ✨ NOVO: VERIFICA O HORÁRIO DE FUNCIONAMENTO DA SALA ✨
-    // (A comparação de strings HH:mm:ss funciona)
     if (hora_inicio < sala.hora_inicio || hora_fim > sala.hora_fim) {
       throw new ConflictException(
         `O funcionamento desta sala é das ${sala.hora_inicio.substring(0,5)} às ${sala.hora_fim.substring(0,5)}.`
       );
     }
     
-    // 4. Verifica conflitos com OUTROS agendamentos
     const dataAgendamento = new Date(dto.data);
     const isDisponivel = await this.verificarDisponibilidade(
       dto.codigo_sala,
@@ -62,13 +58,13 @@ export class AgendamentosService {
       throw new ConflictException(`A sala já está ocupada neste horário.`);
     }
 
-    // 5. Busca o usuário
+    // Busca o usuário
     const usuario = await this.usuariosService.findOne(dto.id_usuario);
     if (!usuario) {
       throw new NotFoundException(`Usuário com ID ${dto.id_usuario} não encontrado.`);
     }
 
-    // 6. Salva o agendamento
+    // Salva o agendamento
     const novoAgendamento = this.agendamentosRepository.create({
       data: dataAgendamento,
       sala,
@@ -79,12 +75,10 @@ export class AgendamentosService {
     return this.agendamentosRepository.save(novoAgendamento);
   }
 
-
-  // --- MÉTODO CREATE RECORRENTE (ATUALIZADO) ---
   async createRecorrente(dto: CreateAgendamentoRecorrenteDto): Promise<Agendamento[]> {
     const { codigo_sala, id_usuario, data, turno, numero_de_semanas } = dto;
     
-    // 1. Traduz o turno para horas
+    // Traduz o turno para horas
     let hora_inicio: string;
     let hora_fim: string;
     switch (turno) {
@@ -99,13 +93,12 @@ export class AgendamentosService {
     await queryRunner.startTransaction();
 
     try {
-      // 2. Busca as entidades fora do loop
+      // Busca as entidades fora do loop
       const sala = await this.salasService.findOne(codigo_sala);
       if (!sala) throw new NotFoundException(`Sala ${codigo_sala} não encontrada.`);
       const usuario = await this.usuariosService.findOne(id_usuario);
       if (!usuario) throw new NotFoundException(`Usuário ${id_usuario} não encontrado.`);
 
-      // 3. ✨ NOVO: VERIFICA O HORÁRIO DE FUNCIONAMENTO (ANTES DO LOOP) ✨
       if (hora_inicio < sala.hora_inicio || hora_fim > sala.hora_fim) {
         throw new ConflictException(
           `Horário indisponível. O funcionamento desta sala é das ${sala.hora_inicio.substring(0,5)} às ${sala.hora_fim.substring(0,5)}.`
@@ -115,11 +108,11 @@ export class AgendamentosService {
       const agendamentosCriados: Agendamento[] = [];
       const dataInicial = new Date(data);
 
-      // 4. Loop para criar os agendamentos semanais
+      // Loop para criar os agendamentos semanais
       for (let i = 0; i < numero_de_semanas; i++) {
         const dataDaSemana = addWeeks(dataInicial, i);
 
-        // 5. Verifica a disponibilidade (conflitos com outros)
+        // Verifica a disponibilidade (conflitos com outros)
         const isDisponivel = await this.verificarDisponibilidade(
           codigo_sala,
           dataDaSemana,
@@ -130,7 +123,6 @@ export class AgendamentosService {
           throw new ConflictException(`A sala já está ocupada na data ${dataDaSemana.toISOString().split('T')[0]}`);
         }
 
-        // 6. Cria o agendamento
         const novoAgendamento = queryRunner.manager.create(Agendamento, {
           data: dataDaSemana,
           hora_inicio,
@@ -176,18 +168,14 @@ export class AgendamentosService {
      });
   }
 
-  // src/agendamentos/agendamentos.service.ts
 
 async findMy(userId: number): Promise<Agendamento[]> {
-  // 1. Cria um objeto Date para o dia de hoje
   const today = new Date();
-  // 2. Define a hora para o início do dia (meia-noite)
   today.setHours(0, 0, 0, 0); 
 
   return this.agendamentosRepository.find({
     where: {
       usuario: { id: userId },
-      // 3. Agora a comparação é entre um Date e um objeto Date
       data: MoreThanOrEqual(today), 
     },
     relations: ['sala'],

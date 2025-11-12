@@ -13,12 +13,10 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
     if (!requiredRoles) {
-      return true; // Se a rota não precisa de nenhum papel, libera o acesso
+      return true;
     }
     const { user } = context.switchToHttp().getRequest();
 
-    // A mágica acontece aqui: verifica se algum dos papéis exigidos
-    // corresponde ao papel do usuário logado (que veio do JWT)
     return requiredRoles.some((role) => user.tipo === role);
   }
 }

@@ -1,11 +1,8 @@
-/* css/agendar.css */
-
 .agendamento-container {
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* Grid para os botões de horário */
 .horarios-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -19,7 +16,6 @@
   background-color: #f8f9fa;
 }
 
-/* Botão de horário */
 .btn-horario {
   background-color: var(--white);
   border: 1px solid var(--border-color);
@@ -36,7 +32,6 @@
   background-color: #e2e6ea;
 }
 
-/* Estado de seleção do botão de horário */
 .btn-horario.selected {
   background-color: var(--primary-color);
   color: var(--white);

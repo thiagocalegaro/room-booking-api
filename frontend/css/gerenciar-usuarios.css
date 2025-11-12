@@ -92,17 +92,15 @@
   border-bottom: none;
 }
 
-/* 👇 NOVO: Estilos para a linha clicável */
 .clickable-row {
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .clickable-row:hover {
-  background-color: #f8f9fa; /* Um cinza bem claro ao passar o mouse */
+  background-color: #f8f9fa; 
 }
 
-/* --- ESTILOS DO MODAL (Sem alteração) --- */
 .modal-backdrop {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -146,7 +144,6 @@
   padding: 0;
 }
 
-/* --- ESTILOS DO FORMULÁRIO (Sem alteração) --- */
 .form-row { display: flex; gap: 1rem; flex-wrap: wrap; }
 .form-row > * { flex: 1; min-width: 150px; }
 .form-check { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; }
@@ -154,7 +151,6 @@
 .form-check-label { margin-bottom: 0; font-weight: 400; }
 
 .btn-excluir {
-  /* Removido: position, top, right */
   background: none;
   border: none;
   color: var(--secondary-color);
@@ -163,8 +159,6 @@
   cursor: pointer;
   z-index: 10;
   transition: color 0.3s;
-  
-  /* Garante que ele seja um ícone quadrado bonito */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -174,5 +168,5 @@
 
 .btn-excluir:hover {
   color: var(--danger-color);
-  background-color: #f8d7da; /* Opcional: fundo vermelho claro no hover */
+  background-color: #f8d7da; 
 }

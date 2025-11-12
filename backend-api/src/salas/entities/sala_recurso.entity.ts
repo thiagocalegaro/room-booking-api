@@ -13,12 +13,11 @@ import { Recurso } from '../../recursos/entities/recurso.entity';
 @Entity('sala_recursos')
 export class SalaRecurso {
   @PrimaryGeneratedColumn()
-  id: number; // Uma PK simples para a relação
+  id: number; 
 
   @Column({ type: 'int' })
   quantidade: number;
 
-  // --- Relacionamentos ---
 
   @ManyToOne(() => Sala, (sala) => sala.salaRecursos, {
     onDelete: 'CASCADE'

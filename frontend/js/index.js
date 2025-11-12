@@ -1,10 +1,8 @@
 // js/index.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Carrega tudo da página
   carregarPagina();
 
-  // 2. Adiciona o listener de logout
   document.getElementById('btn-sair').addEventListener('click', () => {
     localStorage.removeItem('access_token');
     window.location.href = '../paginasAuth/login.html';
@@ -17,18 +15,15 @@ const searchBar = document.getElementById('search-bar');
   searchBar.addEventListener('input', (event) => {
     const searchTerm = event.target.value.toLowerCase();
     
-    // Pega todos os cards que estão na tela
     const allCards = gridContainer.querySelectorAll('.card-admin');
 
     allCards.forEach(card => {
-      // Pega todo o texto de dentro do card
       const cardText = card.textContent.toLowerCase();
       
-      // Verifica se o texto do card inclui o termo da pesquisa
       if (cardText.includes(searchTerm)) {
-        card.style.display = 'block'; // Mostra o card
+        card.style.display = 'block'; 
       } else {
-        card.style.display = 'none'; // Esconde o card
+        card.style.display = 'none'; 
       }
     });
   });
@@ -42,9 +37,8 @@ async function carregarPagina() {
     return;
   }
 
-  // 1. Verifica o token
   try {
-    const payload = jwt_decode.default(token); // Use a chamada correta
+    const payload = jwt_decode.default(token); 
     if (payload.tipo === 'admin') {
       window.location.href = '../paginasAdm/painel.html';
       return;
@@ -56,14 +50,10 @@ async function carregarPagina() {
     return;
   }
 
-  // 2. Chama as duas funções de carregamento
   carregarMeusAgendamentos(token);
   carregarSalasAtivas(token);
 }
 
-/**
- * Busca e renderiza os 3 próximos agendamentos do usuário
- */
 async function carregarMeusAgendamentos(token) {
   const gridAgendamentos = document.getElementById('meus-agendamentos-grid');
   try {
@@ -74,9 +64,8 @@ async function carregarMeusAgendamentos(token) {
     
     const agendamentos = await response.json();
     
-    gridAgendamentos.innerHTML = ''; // Limpa o "carregando"
+    gridAgendamentos.innerHTML = ''; 
     
-    // Pega apenas os 3 primeiros
     const proximosAgendamentos = agendamentos.slice(0, 3);
 
     if (proximosAgendamentos.length === 0) {
@@ -101,9 +90,6 @@ async function carregarMeusAgendamentos(token) {
   }
 }
 
-/**
- * Busca e renderiza todas as salas ativas
- */
 async function carregarSalasAtivas(token) {
   const gridContainer = document.getElementById('salas-grid-container');
   try {
@@ -113,16 +99,13 @@ async function carregarSalasAtivas(token) {
     if (!response.ok) throw new Error('Falha ao carregar salas.');
     
     const salas = await response.json();
-    renderizarCardsSalas(salas); // Chama a função que já existia
+    renderizarCardsSalas(salas); 
 
   } catch (error) {
     gridContainer.innerHTML = `<p class="text-center text-danger">${error.message}</p>`;
   }
 }
 
-/**
- * Renderiza os cards das salas (Função que você já tinha)
- */
 function renderizarCardsSalas(salas) {
   const container = document.getElementById('salas-grid-container');
   container.innerHTML = '';
@@ -162,9 +145,6 @@ function renderizarCardsSalas(salas) {
   });
 }
 
-/**
- * Função auxiliar para listar os recursos no card (Função que você já tinha)
- */
 function gerarListaRecursos(recursos) {
   if (!recursos || recursos.length === 0) {
     return `
@@ -179,13 +159,6 @@ function gerarListaRecursos(recursos) {
   `;
 }
 
-/**
- * Função global chamada pelo botão "Agendar"
- */
 function agendarSala(codigoSala) {
   window.location.href = `agendar.html?sala=${encodeURIComponent(codigoSala)}`;
 }
-/*
-document.getElementById('botao-link').addEventListener('click', () => {
-    window.location.href = '../paginasUsuario/meus-agendamentos.html';
-  });*/
