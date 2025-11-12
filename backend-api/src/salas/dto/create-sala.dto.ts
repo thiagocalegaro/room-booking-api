@@ -47,7 +47,7 @@ export class CreateSalaDto {
 
   @IsBoolean()
   @IsOptional()
-  ativa: boolean;
+  isAtiva: boolean;
 
   @IsOptional()
   @IsArray()
